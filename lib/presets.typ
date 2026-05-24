@@ -21,6 +21,8 @@
     abstract_title: "Zusammenfassung",
     bibliography_title: "Literaturverzeichnis",
     city: "Göttingen",
+    student_id_text: "Matrikelnummer",
+    appendix_text: "Anhang",
   ),
 )
 
@@ -44,6 +46,8 @@
     abstract_title: "Zusammenfassung",
     bibliography_title: "Literaturverzeichnis",
     city: "Göttingen",
+    student_id_text: "Matrikelnummer",
+    appendix_text: "Anhang",
   ),
 )
 
@@ -67,6 +71,8 @@
     abstract_title: "Abstract",
     bibliography_title: "Bibliography",
     city: "Göttingen",
+    student_id_text: "Student ID",
+    appendix_text: "Appendix",
   ),
 )
 
@@ -90,6 +96,8 @@
     abstract_title: "Abstract",
     bibliography_title: "Bibliography",
     city: "Göttingen",
+    student_id_text: "Student ID",
+    appendix_text: "Appendix",
   ),
 )
 
@@ -111,6 +119,8 @@
     abstract_title: "Zusammenfassung",
     bibliography_title: "Literaturverzeichnis",
     city: "Göttingen",
+    student_id_text: "Matrikelnummer",
+    appendix_text: "Anhang",
   ),
 )
 
@@ -132,6 +142,8 @@
     abstract_title: "Abstract",
     bibliography_title: "Bibliography",
     city: "Göttingen",
+    student_id_text: "Student ID",
+    appendix_text: "Appendix",
   ),
 )
 
@@ -153,6 +165,8 @@
     abstract_title: "Zusammenfassung",
     bibliography_title: "Literaturverzeichnis",
     city: "Göttingen",
+    student_id_text: "Matrikelnummer",
+    appendix_text: "Anhang",
   ),
 )
 
@@ -174,6 +188,8 @@
     abstract_title: "Abstract",
     bibliography_title: "Bibliography",
     city: "Göttingen",
+    student_id_text: "Student ID",
+    appendix_text: "Appendix",
   ),
 )
 

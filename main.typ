@@ -1,66 +1,73 @@
-#import "/lib/thesis.typ": thesis
+#import "/lib/thesis.typ": thesis, todo
 #import "/lib/presets.typ"
 
 #thesis(
   config: (
-    ..presets.en_master, // Choose from: de_bachelor, de_master, en_bachelor, en_master, de_seminar, en_seminar, de_expose, en_expose
+    ..presets.de_master, // Choose from: de_bachelor, de_master, en_bachelor, en_master, de_seminar, en_seminar, de_expose, en_expose
     
     // Core details
-    title: "My title",
-    author: "Jane Doe",
-    date: none, // Set to none for today's date, or specify a custom date string (e.g. "2026-05-24")
-    firstsupervisor: "My first supervisor",
-    secondsupervisor: "My second supervisor",
-    degree_type: "master", // "master", "bachelor", "seminar", or "expose"
-    lang: "en", // "en" or "de"
-    course_of_study: "Applied Computer Science",
-    style: "modern", // "modern" or "legacy"
+    title: "Titel der Arbeit",
+    author: "Vorname Nachname",
+    student_id: none, // Deine Matrikelnummer (optional, z. B. für Seminararbeiten)
+    author_email: none, // Deine E-Mail (optional)
+    date: none, // Auf none lassen für das heutige Datum, oder ein Datum angeben (z. B. "2026-05-24")
+    firstsupervisor: "Erstprüfer*in",
+    secondsupervisor: "Zweitprüfer*in",
+    degree_type: "master", // "master", "bachelor", "seminar" oder "expose"
+    lang: "de", // "de" oder "en"
+    course_of_study: "Angewandte Informatik",
+    style: "modern", // "modern" oder "legacy"
     
-    // --- Advanced Customization Options (Dynamic Customization) ---
+    // --- Erweiterte Optionen (Advanced Options) ---
     
-    // Custom Logo (Default: "/images/goe-logo.jpg")
-    // Set to none to hide the logo, or specify an absolute path to a custom SVG/JPG/PNG
+    // Entwurfs-Modus (auf true setzen, um "DRAFT"-Wasserzeichen anzuzeigen und Todos zu rendern)
+    draft: false,
+    
+    // Custom Logo (Standard: "/images/goe-logo.jpg")
+    // Auf none setzen, um das Logo auszublenden, oder einen Pfad zu einer SVG/JPG/PNG angeben
     // logo: "/images/goe-logo.jpg", 
     // logo_width: 6.5cm,
     
-    // Custom Outline / Table of Contents
-    // Set to false to hide the outline page completely (e.g. for exposés or short papers)
+    // Inhaltsverzeichnis (auf false setzen, um das Verzeichnis auszublenden, z. B. bei Exposés)
     // show_outline: true,
     
-    // Custom Translations / Branding override
-    // You can override individual preset fields without redefining the whole preset!
+    // Eigene Übersetzungs- und Marken-Overrides
     // translations: (
-    //   institution: "Institute of Computer Science",
+    //   institution: "Institut für Informatik",
     //   university: "Georg-August-Universität Göttingen",
     //   city: "Göttingen",
     // ),
     
-    // Custom Contact Page (Optional & Dynamic)
-    // Set contact to none to disable the contact info page entirely, or override specific fields:
+    // Custom Kontakt-Seite (Standardmäßig aktiviert, zum Deaktivieren auf none setzen)
     // contact: (
     //   university: "Georg-August-Universität Göttingen",
-    //   address: [Goldschmidtstraße 7\ 37077 Göttingen\ Germany],
+    //   address: [Goldschmidtstraße 7\ 37077 Göttingen\ Deutschland],
     //   phone: "+49 (551) 39-172000",
     //   fax: "+49 (551) 39-14403",
     //   email: "office@informatik.uni-goettingen.de",
     //   website: "www.informatik.uni-goettingen.de",
     // ),
   ),
-  abstract: include "content/abstract.typ",
-  // Set to none to omit the declaration of independence completely (e.g. for seminar papers or exposés)
-  declaration: include "content/declaration.typ",
+  
+  // Zusammenfassung / Abstract
+  // Kann auch ein Dictionary sein für zweisprachige Abstracts: (de: include "...", en: include "...")
+  abstract: include "content/abstract_de.typ",
+  
+  // Selbstständigkeitserklärung (auf none setzen, falls nicht benötigt, z. B. bei Exposés)
+  declaration: include "content/declaration_de.typ",
+  
+  // Kapitel deiner Arbeit
   chapters: (
-    // once you have read it, you can comment out the template
-    include "content/template.typ",
-    // include "content/content.typ",
+    include "content/content_de.typ",
   ),
+  
+  // Literaturverzeichnis (auf none setzen, falls nicht benötigt)
   bibliography: bibliography(
     "content/references.bib",
     style: "ieee",
     title: none,
   ),
+  
+  // Anhang (auf none setzen, falls nicht benötigt)
   // appendix: include "content/appendix.typ",
 )
-
-
-

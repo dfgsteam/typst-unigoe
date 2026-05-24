@@ -4,6 +4,16 @@
 #import "./pages/prelude.typ": prelude
 #import "./presets.typ"
 
+#let draft_state = state("draft", false)
+
+#let todo(color: orange, body) = context {
+  if draft_state.get() {
+    box(fill: color, width: 100%, inset: 8pt, radius: 5pt, stroke: black)[
+      #text(weight: "bold")[TODO:] #body
+    ]
+  }
+}
+
 #let thesis(
   config: none,
   titlepage: none,
@@ -94,6 +104,20 @@
   }
   show: apply_style.with(lang: full_config.lang, translations: full_config.translations)
 
+  // set draft state
+  draft_state.update(config.at("draft", default: false))
+
+  // set page background watermark in draft mode
+  set page(background: context {
+    if draft_state.get() {
+      align(center + horizon)[
+        #rotate(45deg)[
+          #text(80pt, fill: rgb(220, 220, 220, 40%), weight: "bold")[DRAFT]
+        ]
+      ]
+    }
+  })
+
   // import the first few pages (title page, contact info, declaration, abstract, outline)
   prelude(config: full_config, abstract: abstract, declaration: declaration)
 
@@ -108,23 +132,25 @@
     ch
   }
 
-  pagebreak()
-  set heading(numbering: "A")
-  counter(heading).update(0)
-
-  set page(footer: {
-    context align(center, counter(heading).display("A - ")+ counter(page).display("1"))
-  })
-
-  // set page(numbering: "I")
-  //Bibliography
+  // Bibliography (rendered in standard page style, no appendix footer)
   if bibliography != none {
+    pagebreak()
     heading(full_config.translations.bibliography_title)
     v(1em)
     bibliography
   }
+
+  // Appendix (only active and styled if appendix is provided)
   if appendix != none {
     pagebreak()
+    set heading(numbering: "A")
+    counter(heading).update(0)
+
+    set page(footer: context {
+      let head_disp = counter(heading).display("A")
+      let app_text = full_config.translations.at("appendix_text", default: "Appendix")
+      align(center, [#app_text #head_disp - #counter(page).display("1")])
+    })
     appendix
   }
 }
