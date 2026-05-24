@@ -3,7 +3,7 @@
 
 #thesis(
   config: (
-    ..presets.en_master, // Choose from: de_bachelor, de_master, en_bachelor, en_master
+    ..presets.en_master, // Choose from: de_bachelor, de_master, en_bachelor, en_master, de_seminar, en_seminar, de_expose, en_expose
     
     // Core details
     title: "My title",
@@ -11,7 +11,7 @@
     date: none, // Set to none for today's date, or specify a custom date string (e.g. "2026-05-24")
     firstsupervisor: "My first supervisor",
     secondsupervisor: "My second supervisor",
-    degree_type: "master", // "master" or "bachelor"
+    degree_type: "master", // "master", "bachelor", "seminar", or "expose"
     lang: "en", // "en" or "de"
     course_of_study: "Applied Computer Science",
     style: "modern", // "modern" or "legacy"
@@ -22,6 +22,10 @@
     // Set to none to hide the logo, or specify an absolute path to a custom SVG/JPG/PNG
     // logo: "/images/goe-logo.jpg", 
     // logo_width: 6.5cm,
+    
+    // Custom Outline / Table of Contents
+    // Set to false to hide the outline page completely (e.g. for exposés or short papers)
+    // show_outline: true,
     
     // Custom Translations / Branding override
     // You can override individual preset fields without redefining the whole preset!
@@ -43,6 +47,7 @@
     // ),
   ),
   abstract: include "content/abstract.typ",
+  // Set to none to omit the declaration of independence completely (e.g. for seminar papers or exposés)
   declaration: include "content/declaration.typ",
   chapters: (
     // once you have read it, you can comment out the template

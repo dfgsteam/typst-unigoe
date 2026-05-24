@@ -25,12 +25,16 @@
   set page(numbering: "I")
 
   // Declaration
-  declarationpage(config: config, declaration: declaration)
+  if declaration != none {
+    declarationpage(config: config, declaration: declaration)
+  }
 
   // Abstract page
   abstractpage(config: config, abstract: abstract)
 
   // Outline
-  set outline.entry(fill: repeat(". "))
-  outline(depth: 3, indent: auto, title: config.translations.outline_title)
+  if config.at("show_outline", default: true) {
+    set outline.entry(fill: repeat(". "))
+    outline(depth: 3, indent: auto, title: config.translations.outline_title)
+  }
 }

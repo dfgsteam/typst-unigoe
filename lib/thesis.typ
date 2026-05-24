@@ -19,15 +19,21 @@
     message: "Only german (de) and english (en) are supported as document languages (lang).",
   )
   assert(
-    config.degree_type == "bachelor" or config.degree_type == "master",
-    message: "Please set degree_type to either bachelor or master.",
+    config.degree_type in ("bachelor", "master", "seminar", "expose"),
+    message: "Please set degree_type to one of: bachelor, master, seminar, expose.",
   )
 
   // dynamic configuration merging
   let default_preset = if config.lang == "de" {
-    if config.degree_type == "bachelor" { presets.de_bachelor } else { presets.de_master }
+    if config.degree_type == "bachelor" { presets.de_bachelor }
+    else if config.degree_type == "master" { presets.de_master }
+    else if config.degree_type == "seminar" { presets.de_seminar }
+    else { presets.de_expose }
   } else {
-    if config.degree_type == "bachelor" { presets.en_bachelor } else { presets.en_master }
+    if config.degree_type == "bachelor" { presets.en_bachelor }
+    else if config.degree_type == "master" { presets.en_master }
+    else if config.degree_type == "seminar" { presets.en_seminar }
+    else { presets.en_expose }
   }
 
   let merged_translations = default_preset.translations + config.at("translations", default: (:))
