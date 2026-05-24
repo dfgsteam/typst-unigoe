@@ -11,6 +11,7 @@
   config: none,
   abstract: none,
   declaration: none,
+  acronyms: none,
 ) = {
   // disable page numbering for the first few pages
   set page(numbering: none)
@@ -36,5 +37,23 @@
   if config.at("show_outline", default: true) {
     set outline.entry(fill: repeat(". "))
     outline(depth: 3, indent: auto, title: config.translations.outline_title)
+    pagebreak()
+  }
+
+  // List of Abbreviations (Acronyms)
+  if acronyms != none and acronyms.len() > 0 {
+    let title = if config.lang == "de" { "Abkürzungsverzeichnis" } else { "List of Abbreviations" }
+    heading(level: 1, numbering: none, outlined: true)[#title]
+    v(1.5em)
+    grid(
+      columns: (3cm, 1fr),
+      row-gutter: 1.5em,
+      column-gutter: 1.5em,
+      ..acronyms.pairs().map(((key, val)) => (
+        strong(key),
+        if val.len() > 1 and config.lang == "de" { val.at(1) } else { val.first() }
+      )).flatten()
+    )
+    pagebreak()
   }
 }

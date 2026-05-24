@@ -1,4 +1,4 @@
-#import "/lib/thesis.typ": thesis, todo
+#import "/lib/thesis.typ": thesis, todo, acr
 #import "/lib/presets.typ"
 
 #thesis(
@@ -7,6 +7,8 @@
     
     // Core details
     title: "A Dynamic and Customizable Typst Template for Theses, Seminar Papers, and Exposés",
+    subtitle: "A modern alternative to LaTeX for university students",
+    translated_title: "Eine dynamische und anpassbare Typst-Vorlage für Abschlussarbeiten, Seminararbeiten und Exposés",
     author: "Jane Doe",
     student_id: "12345678",
     author_email: "jane.doe@stud.uni-goettingen.de",
@@ -59,6 +61,12 @@
   ),
   
   declaration: include "content/declaration.typ",
+
+  acronyms: (
+    API: ("Application Programming Interface", "Schnittstelle zur Anwendungsprogrammierung"),
+    REST: ("Representational State Transfer", "Zustandsloser Architekturstil"),
+    JSON: ("JavaScript Object Notation", "JavaScript-Objekt-Notation"),
+  ),
   
   chapters: (
     // Comprehensive template demo showing formatting, math, figures, etc.

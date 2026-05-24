@@ -17,7 +17,15 @@
           #text(size: 20pt, weight: "bold", config.translations.degree_text + "\n")
           #config.translations.submitted_text "#config.course_of_study"
         ],
-        heading(bookmarked: false, outlined: false, numbering: none, par(leading: .4em)[#config.title]),
+        heading(bookmarked: false, outlined: false, numbering: none, par(leading: .6em)[
+          #config.title
+          #if config.at("subtitle", default: none) != none [
+            \ #text(size: 13pt, weight: "medium", fill: rgb("444444"))[#config.subtitle]
+          ]
+          #if config.at("translated_title", default: none) != none [
+            \ #text(size: 12pt, weight: "regular", style: "italic", fill: rgb("666666"))[#config.translated_title]
+          ]
+        ]),
         [
           #text(config.author)
           #if config.at("student_id", default: none) != none [

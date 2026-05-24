@@ -70,6 +70,21 @@
     entry.indented(strong(entry.prefix()), strong[#entry.body() #box(width: 1fr, " ") #entry.page()])
   }
 
+  // premium block code styling
+  show raw.where(block: true): it => {
+    block(
+      fill: rgb("f9f9fb"),
+      stroke: 0.5pt + rgb("e1e1e8"),
+      inset: 12pt,
+      radius: 6pt,
+      width: 100%,
+      clip: true,
+    )[
+      #set text(size: 8.5pt, font: "Fira Code", weight: "regular")
+      #it
+    ]
+  }
+
   body
 }
 

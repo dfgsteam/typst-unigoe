@@ -78,6 +78,13 @@ def main():
     # 4. Meta Details
     print("4. Meta Details / Projektdaten")
     title = prompt("Title of the work / Titel der Arbeit")
+    
+    subtitle = prompt("Subtitle / Untertitel (optional, press Enter to skip)", "")
+    subtitle_val = f'"{subtitle}"' if subtitle else "none"
+
+    translated_title = prompt("Translated Title / Übersetzter Titel (optional, press Enter to skip)", "")
+    trans_title_val = f'"{translated_title}"' if translated_title else "none"
+
     author = prompt("Author name / Name des Autors")
     
     student_id = prompt("Student ID / Matrikelnummer (optional, press Enter to skip)", "")
@@ -126,7 +133,7 @@ def main():
         declaration_val = f'include "{declaration_file}"'
         outline_val = "// show_outline: true,"
 
-    main_content = f"""#import "/lib/thesis.typ": thesis, todo
+    main_content = f"""#import "/lib/thesis.typ": thesis, todo, acr
 #import "/lib/presets.typ"
 
 #thesis(
@@ -135,6 +142,8 @@ def main():
     
     // Core details
     title: "{title}",
+    subtitle: {subtitle_val},
+    translated_title: {trans_title_val},
     author: "{author}",
     student_id: {student_id_val},
     author_email: {email_val},
@@ -186,6 +195,13 @@ def main():
   
   // Declaration of independence (Set to none to omit it entirely, e.g. for seminar papers or exposés)
   declaration: {declaration_val},
+
+  // Acronyms dictionary (optional)
+  // Define your acronyms here: (Key: (English definition, German definition))
+  // acronyms: (
+  //   API: ("Application Programming Interface", "Schnittstelle zur Anwendungsprogrammierung"),
+  //   REST: ("Representational State Transfer", "Zustandsloser Architekturstil"),
+  // ),
   
   // Chapters of your document
   chapters: (

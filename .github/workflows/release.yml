@@ -15,10 +15,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Typst
-        uses: taiki-e/install-action@v2
-        with:
-          tool: typst
+      - name: Setup Typst
+        uses: charliebruer/setup-typst@v5
 
       - name: Compile PDF Documents
         run: |

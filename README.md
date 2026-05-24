@@ -44,11 +44,19 @@ This project is a **fork and extension** of the excellent unofficial Typst templ
 ## 🚀 Getting Started
 
 ### 1. Initialize Your Document
-Clone this repository and run the interactive setup script in your terminal:
+
+You can initialize a brand new project in a fresh directory with a single terminal command:
 ```bash
+curl -fsSL https://raw.githubusercontent.com/dfgsteam/typst-unigoe/main/init.sh | bash
+```
+
+Alternatively, you can manually clone this repository and run the setup script:
+```bash
+git clone https://github.com/dfgsteam/typst-unigoe.git my-thesis
+cd my-thesis
 python3 setup.py
 ```
-The wizard will guide you through choosing your language, degree/paper format, title, author name, student ID, and supervisors, generating a clean `main.typ` file instantly.
+The wizard will guide you through configuring your language, paper format, title, subtitle, author, student ID, and supervisors, generating a pristine `main.typ` instantly.
 
 ### 2. Local Compilation & Watching
 Compile your document locally using the provided `Makefile`:

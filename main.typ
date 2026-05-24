@@ -1,4 +1,4 @@
-#import "/lib/thesis.typ": thesis, todo
+#import "/lib/thesis.typ": thesis, todo, acr
 #import "/lib/presets.typ"
 
 #thesis(
@@ -7,6 +7,8 @@
     
     // Core details
     title: "Titel der Arbeit",
+    subtitle: none, // Untertitel (optional)
+    translated_title: none, // Übersetzter Titel (optional)
     author: "Vorname Nachname",
     student_id: none, // Deine Matrikelnummer (optional, z. B. für Seminararbeiten)
     author_email: none, // Deine E-Mail (optional)
@@ -55,6 +57,12 @@
   
   // Selbstständigkeitserklärung (auf none setzen, falls nicht benötigt, z. B. bei Exposés)
   declaration: include "content/declaration_de.typ",
+
+  // Abkürzungen (optional, zum Aktivieren auskommentieren und anpassen)
+  // acronyms: (
+  //   API: ("Application Programming Interface", "Schnittstelle zur Anwendungsprogrammierung"),
+  //   REST: ("Representational State Transfer", "Zustandsloser Architekturstil"),
+  // ),
   
   // Kapitel deiner Arbeit
   chapters: (

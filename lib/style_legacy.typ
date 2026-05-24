@@ -62,6 +62,22 @@
 
   // increase line spacing in the outline
   show outline: set block(spacing: 1em)
+
+  // premium block code styling
+  show raw.where(block: true): it => {
+    block(
+      fill: rgb("f9f9fb"),
+      stroke: 0.5pt + rgb("e1e1e8"),
+      inset: 12pt,
+      radius: 6pt,
+      width: 100%,
+      clip: true,
+    )[
+      #set text(size: 8.5pt, font: "Fira Code", weight: "regular")
+      #it
+    ]
+  }
+
   body
 }
 // style footer to make page numbers alternate. this get's applied after the introductory pages

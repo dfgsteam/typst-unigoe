@@ -8,9 +8,54 @@
 
 #let todo(color: orange, body) = context {
   if draft_state.get() {
+    [#metadata((type: "todo", body: body)) <todo>]
     box(fill: color, width: 100%, inset: 8pt, radius: 5pt, stroke: black)[
       #text(weight: "bold")[TODO:] #body
     ]
+  }
+}
+
+#let list-of-todos() = context {
+  if draft_state.get() {
+    let todos = query(<todo>)
+    if todos.len() > 0 {
+      heading(level: 1, numbering: none, outlined: false)[Offene Aufgaben (TODOs)]
+      v(0.5em)
+      table(
+        columns: (2cm, 1fr),
+        stroke: 0.5pt + rgb("dddddd"),
+        inset: 8pt,
+        align: (center, left),
+        table.header([*Seite / Page*], [*Aufgabe / Task*]),
+        ..todos.map(it => (
+          [#it.location().page()],
+          it.value.body
+        )).flatten()
+      )
+    }
+  }
+}
+
+#let acronyms_store = state("acronyms-store", (:))
+#let acronym-state = state("used-acronyms", ())
+
+#let acr(key) = context {
+  let dict = acronyms_store.get()
+  let used = acronym-state.get()
+  let entry = dict.at(key, default: none)
+  if entry == none {
+    return text(red)[#key?]
+  }
+  if key in used {
+    key
+  } else {
+    acronym-state.update(u => {
+      if key not in u {
+        u.push(key)
+      }
+      u
+    })
+    [#entry.first() (#key)]
   }
 }
 
@@ -19,10 +64,14 @@
   titlepage: none,
   abstract: none,
   declaration: none,
+  acronyms: none,
   chapters: none,
   bibliography: none,
   appendix: none,
 ) = {
+  // initialize acronyms store
+  acronyms_store.update(acronyms)
+
   // validate and clean up arguments
   assert(
     config.lang == "de" or config.lang == "en",
@@ -119,7 +168,7 @@
   })
 
   // import the first few pages (title page, contact info, declaration, abstract, outline)
-  prelude(config: full_config, abstract: abstract, declaration: declaration)
+  prelude(config: full_config, abstract: abstract, declaration: declaration, acronyms: acronyms)
 
   // enable page numbering
   set page(numbering: "1")
@@ -153,4 +202,7 @@
     })
     appendix
   }
+
+  // Todo list at the very end (only visible in draft mode)
+  list-of-todos()
 }
