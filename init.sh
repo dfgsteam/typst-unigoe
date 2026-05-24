@@ -13,8 +13,9 @@ DEST_DIR=${DEST_DIR:-my-thesis}
 
 if [ "$DEST_DIR" = "." ]; then
   # Initialize in current directory
-  if [ "$(ls -A)" ]; then
-    echo "Warning: Current directory is not empty. / Warnung: Aktuelles Verzeichnis ist nicht leer."
+  # Check if directory contains non-git files
+  if [ "$(ls -A | grep -v '^\.git$')" ]; then
+    echo "Warning: Current directory contains files. / Warnung: Aktuelles Verzeichnis enthält Dateien."
     read -p "Do you want to proceed? / Trotzdem fortfahren? (y/n): " PROCEED
     if [[ ! "$PROCEED" =~ ^[Yy]$ ]]; then
       echo "Aborted."
@@ -27,14 +28,18 @@ if [ "$DEST_DIR" = "." ]; then
   TEMP_DIR=$(mktemp -d 2>/dev/null || mktemp -d -t 'typst-unigoe')
   git clone --depth 1 https://github.com/dfgsteam/typst-unigoe.git "$TEMP_DIR"
   
+  # Delete the cloned git config so we don't overwrite the user's existing remote git config
+  rm -rf "$TEMP_DIR/.git"
+  
   echo "Copying files... / Kopiere Dateien..."
-  # Copy all files including dotfiles
   cp -r "$TEMP_DIR"/. .
   rm -rf "$TEMP_DIR"
   
-  echo "Initializing fresh Git repository... / Initialisiere neues Git-Repository..."
-  rm -rf .git
-  git init
+  # Only initialize git if it's not already a git repository
+  if [ ! -d ".git" ]; then
+    echo "Initializing fresh Git repository... / Initialisiere neues Git-Repository..."
+    git init
+  fi
   
 else
   # Initialize in new directory

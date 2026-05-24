@@ -88,10 +88,14 @@
   body
 }
 
-#let header(ctx) = {
-  align(right)[#ctx.title]
-  v(.5em, weak: true)
-  line(stroke: .7pt, length: 100%)
+#let header(ctx) = context {
+  // Suppress running header on pages where a new chapter (level 1 heading) starts
+  let has-ch-start = query(heading.where(level: 1)).any(h => h.location().page() == here().page())
+  if not has-ch-start {
+    align(right)[#ctx.title]
+    v(.5em, weak: true)
+    line(stroke: .7pt, length: 100%)
+  }
 }
 #let footer(ctx) = {
   line(stroke: 0.7pt, length: 100%)
@@ -99,8 +103,8 @@
 
   grid(columns: (auto, auto, auto), column-gutter: (1fr, 1fr),
     [#context {
-      let headings = query(selector(heading).before(here()))
-      let ch_heading = headings.filter(h => h.level == 1).at(-1, default: none)
+      let headings = query(heading)
+      let ch_heading = headings.filter(h => h.level == 1 and h.location().page() <= here().page()).at(-1, default: none)
       if ch_heading == none {
         return none
       }

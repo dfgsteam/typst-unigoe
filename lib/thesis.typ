@@ -131,10 +131,15 @@
   full_config.insert("logo", logo)
   full_config.insert("logo_width", logo_width)
 
-  // set documents properties
-  set document(author: full_config.author, title: full_config.title, date: datetime.today())
-  // set document language
-  set text(lang: full_config.lang)
+  // set document properties with optional keywords
+  set document(
+    author: full_config.author,
+    title: full_config.title,
+    date: datetime.today(),
+    keywords: full_config.at("keywords", default: ()),
+  )
+  // set document language with hyphenation
+  set text(lang: full_config.lang, hyphenate: true)
 
   // apply a style preset
   let apply_style
