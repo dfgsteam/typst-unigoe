@@ -11,7 +11,4 @@ description = "A highly dynamic and customizable unofficial thesis template for 
 repository = "https://github.com/dfgsteam/typst-unigoe"
 exclude = ["content"]
 
-[template]
-path = "template"
-entrypoint = "main.typ"
-thumbnail = "thumbnail.png"
+# Template package metadata is managed by git template repository.

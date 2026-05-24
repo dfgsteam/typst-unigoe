@@ -132,10 +132,10 @@ A common example for passing `content` into a function is centering:
   This text appears centered on the page.
 ]
 
-Typst comes with a simple markdown-like syntax for many common problems. Text can be made *\*bold\** , _\_italic\__ or #raw("`monospaced`"). Formatting text is generally exposed via typst's `text` function that #text(weight: "thin", size: 12pt, font: "Comic Neue", fill: red)[can do a lot]:
+Typst comes with a simple markdown-like syntax for many common problems. Text can be made *\*bold\** , _\_italic\__ or #raw("`monospaced`"). Formatting text is generally exposed via typst's `text` function that #text(weight: "thin", size: 12pt, font: "New Computer Modern", fill: red)[can do a lot]:
 
 ```typst
-#text(weight: "thin", size: 12pt, font: "Comic Neue", fill: red)[can do a lot]
+#text(weight: "thin", size: 12pt, font: "New Computer Modern", fill: red)[can do a lot]
 ```
 
 The function that generated monospaced content is called `raw` and can also display syntax-highlighted code. It also has a shorthand for multiline code-like content:

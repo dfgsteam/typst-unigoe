@@ -25,6 +25,18 @@ def prompt(text, default=None):
             print("\nAborted.")
             sys.exit(0)
 
+def escape_quotes(val):
+    if not val:
+        return val
+    return val.replace('"', '\\"')
+
+def get_existing_file(preferred, fallback):
+    if os.path.exists(preferred):
+        return preferred
+    if os.path.exists(fallback):
+        return fallback
+    return preferred # fallback to default if neither exists
+
 def main():
     clear_screen()
     print("=========================================================")
@@ -77,24 +89,24 @@ def main():
 
     # 4. Meta Details
     print("4. Meta Details / Projektdaten")
-    title = prompt("Title of the work / Titel der Arbeit")
+    title = escape_quotes(prompt("Title of the work / Titel der Arbeit"))
     
-    subtitle = prompt("Subtitle / Untertitel (optional, press Enter to skip)", "")
+    subtitle = escape_quotes(prompt("Subtitle / Untertitel (optional, press Enter to skip)", ""))
     subtitle_val = f'"{subtitle}"' if subtitle else "none"
 
-    translated_title = prompt("Translated Title / Übersetzter Titel (optional, press Enter to skip)", "")
+    translated_title = escape_quotes(prompt("Translated Title / Übersetzter Titel (optional, press Enter to skip)", ""))
     trans_title_val = f'"{translated_title}"' if translated_title else "none"
 
-    author = prompt("Author name / Name des Autors")
+    author = escape_quotes(prompt("Author name / Name des Autors"))
     
-    student_id = prompt("Student ID / Matrikelnummer (optional, press Enter to skip)", "")
+    student_id = escape_quotes(prompt("Student ID / Matrikelnummer (optional, press Enter to skip)", ""))
     student_id_val = f'"{student_id}"' if student_id else "none"
 
-    email = prompt("E-Mail Address / E-Mail (optional, press Enter to skip)", "")
+    email = escape_quotes(prompt("E-Mail Address / E-Mail (optional, press Enter to skip)", ""))
     email_val = f'"{email}"' if email else "none"
 
-    first_supervisor = prompt("First Supervisor / Erstbetreuer", "Prof. Dr. Jane Doe")
-    second_supervisor = prompt("Second Supervisor / Zweitbetreuer (optional, press Enter to skip)", "")
+    first_supervisor = escape_quotes(prompt("First Supervisor / Erstbetreuer", "Prof. Dr. Jane Doe"))
+    second_supervisor = escape_quotes(prompt("Second Supervisor / Zweitbetreuer (optional, press Enter to skip)", ""))
     second_sup_val = f'"{second_supervisor}"' if second_supervisor else "none"
 
     if degree_type == "seminar":
@@ -102,7 +114,7 @@ def main():
     else:
         default_course = "Applied Computer Science" if lang == "en" else "Angewandte Informatik"
         
-    course_of_study = prompt("Course of Study or Seminar / Studiengang oder Seminar", default_course)
+    course_of_study = escape_quotes(prompt("Course of Study or Seminar / Studiengang oder Seminar", default_course))
 
     print()
 
@@ -120,10 +132,18 @@ def main():
 
     print("Generating main.typ... / Erstelle main.typ...")
 
-    # Determine abstract and declaration defaults
-    abstract_file = "content/abstract_de.typ" if lang == "de" else "content/abstract.typ"
-    declaration_file = "content/declaration_de.typ" if lang == "de" else "content/declaration.typ"
-    content_file = "content/content_de.typ" if lang == "de" else "content/content.typ"
+    # Determine abstract and declaration defaults with robust file presence checking
+    preferred_abstract = "content/abstract_de.typ" if lang == "de" else "content/abstract.typ"
+    fallback_abstract = "content/abstract.typ" if lang == "de" else "content/abstract_de.typ"
+    abstract_file = get_existing_file(preferred_abstract, fallback_abstract)
+
+    preferred_decl = "content/declaration_de.typ" if lang == "de" else "content/declaration.typ"
+    fallback_decl = "content/declaration.typ" if lang == "de" else "content/declaration_de.typ"
+    declaration_file = get_existing_file(preferred_decl, fallback_decl)
+
+    preferred_content = "content/content_de.typ" if lang == "de" else "content/content.typ"
+    fallback_content = "content/content.typ" if lang == "de" else "content/content_de.typ"
+    content_file = get_existing_file(preferred_content, fallback_content)
 
     # For exposé, declaration is usually none
     if degree_type == "expose":

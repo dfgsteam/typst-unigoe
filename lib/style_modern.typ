@@ -80,7 +80,7 @@
       width: 100%,
       clip: true,
     )[
-      #set text(size: 8.5pt, font: "Fira Code", weight: "regular")
+      #set text(size: 8.5pt, font: "DejaVu Sans Mono", weight: "regular")
       #it
     ]
   }
