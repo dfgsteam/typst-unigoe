@@ -1,0 +1,81 @@
+Version 0.9.6
+        * moved and renamed uni301[AB] to uni27E[67]; neither really
+          fits, but the former ones are specified as 'full width'
+        * build combining marks
+        * some more glyphs in Latin Extended-B: uni018E, uni01DD,
+          uni0191, uni0192 (alternate form for U+0192)  
+        * added uni2052 (commercial minus sign, \textdiscount) and
+          uni2031 (\textpertenthousand) 
+
+Version 0.9.5
+        * better font naming: use 'Regular' instead of 'Roman' but omit
+          'Regular' in the OpenType FullName 
+        * use 'subs' instead of 'sinf' for below baseline subscripts
+          (Adobe has changed their mind on this)
+        * special 'smcp' for 'i' in Turkish etc
+        * generate only OTL tables
+
+Version 0.9.4
+	* All fonts:
+           - AGL renaming
+               Omega  =>  uni2126      
+           - added stylistic set 'ss01': 
+             [SsTt]commaaccent instead of [SsTt]cedilla
+           - removed {one,two,three,four}{superior,inferior}
+           - added slightly darker {zero,..,nine}.{superior,inferior} 
+           - added 'sups'  and 'sinf' OTL feature
+           - added slightly darker {zero,..,nine}.{numerator,denominator} 
+           - added 'numr'  and 'dnom' OTL feature
+	* Roman font:
+           - narrower pi 
+	* Italic and Bold-Italic font:
+           - slightly darker numero
+
+Version 0.9.3
+	* All fonts:
+           - numero with narrow N
+           - AGL renaming
+               nonbreakingspace  =>  uni00A0      
+               softhyphen        =>  uni00AD
+               mu                =>  uni00B5
+               Delta             =>  uni2206
+           - started to add OTL features: smcp, c2sc, onum, case, locl
+	* Roman font:
+           - fontforge now leaves hhint at the upper serifs in 'H' 
+           - added uni018E for XeTeX logo :-)
+           - added [ai]macron.sc, idotaccent.sc
+	* Italic font:
+	   - added [Oo]ogonek
+           - left top serif in kra changed from 'k' to 'n' style
+	* Bold font:
+           - slighlty lighter @
+	   - new ogonek with reduced weight
+	   - redone all characters with ogonek 
+	   - added [Oo]ogonek
+	   - improved hinting in new glyphs
+	* Bold-Italic font:
+	   - new ogonek with reduced weight
+	   - redone all characters with ogonek 
+	   - added [Oo]ogonek
+           - left top serif in kra changed from 'k' to 'n' style
+	   - improved hinting in new glyphs
+
+	
+Version 0.9.2
+        * rename tcedilla.sc to uni0163.sc and tcommaacent.sc to uni021B.sc
+       
+
+Version 0.9.1
+        * changed position of acute in cacute to be comparable with
+          eacute in bold and regular font
+
+        * improved hinting for regular (DTZvwy) and italic (57BZ) font
+
+        * BlueZone at x-height for bold font
+
+        * rename [Tt]cedilla to uni016[23] and [Tt]commaacent to uni021[AB]
+
+
+Version 0.9, 2005-07-18
+        * first public release
+

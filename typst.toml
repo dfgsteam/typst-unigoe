@@ -1,0 +1,14 @@
+[package]
+name = "cs-ugoe-thesis"
+version = "0.2.0"
+entrypoint = "main.typ"
+authors = ["Lorenz Glißmann <lorenz.glissmann@uni-goettingen.de>"]
+license = "MIT"
+description = "Inofficial thesis template for computer and data science at Georg-August-University Göttingen."
+repository = "https://gitlab.gwdg.de/glissmann/thesis-template"
+exclude = ["content"]
+
+[template]
+path = "template"
+entrypoint = "main.typ"
+thumbnail = "thumbnail.png"
