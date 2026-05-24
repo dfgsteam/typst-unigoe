@@ -116,7 +116,7 @@
     default_contact
   }
 
-  let logo = config.at("logo", default: "/images/goe-logo.jpg")
+  let logo = config.at("logo", default: "/images/ugo-logo.svg")
   let logo_width = config.at("logo_width", default: 6.5cm)
 
   let date = config.at("date", default: none)

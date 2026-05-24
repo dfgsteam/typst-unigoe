@@ -25,9 +25,9 @@
     // Entwurfs-Modus (auf true setzen, um "DRAFT"-Wasserzeichen anzuzeigen und Todos zu rendern)
     draft: false,
     
-    // Custom Logo (Standard: "/images/goe-logo.jpg")
+    // Custom Logo (Standard: "/images/ugo-logo.svg")
     // Auf none setzen, um das Logo auszublenden, oder einen Pfad zu einer SVG/JPG/PNG angeben
-    // logo: "/images/goe-logo.jpg", 
+    // logo: "/images/ugo-logo.svg", 
     // logo_width: 6.5cm,
     
     // Inhaltsverzeichnis (auf false setzen, um das Verzeichnis auszublenden, z. B. bei Exposés)

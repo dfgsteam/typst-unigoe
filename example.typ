@@ -25,9 +25,9 @@
     // Draft Mode (Set to true to show a DRAFT watermark and e.g. render all #todo() boxes)
     draft: true,
     
-    // Custom Logo (Default: "/images/goe-logo.jpg")
+    // Custom Logo (Default: "/images/ugo-logo.svg")
     // Set to none to hide the logo, or specify an absolute path to a custom SVG/JPG/PNG
-    // logo: "/images/goe-logo.jpg", 
+    // logo: "/images/ugo-logo.svg", 
     // logo_width: 6.5cm,
     
     // Custom Outline / Table of Contents

@@ -1,0 +1,10 @@
+# Force LF line endings for text files to prevent Windows CRLF issues in Linux runners
+* text eol=lf
+
+# Binary files
+*.jpg binary
+*.png binary
+*.svg text eol=lf
+*.ttf binary
+*.otf binary
+*.pdf binary

@@ -283,19 +283,19 @@ The vector-based graphic formats i.e. `svg` (but unfortunately not yet `pdf`) ar
 
 #grid(columns: (60%, 1fr), [
   ```typst
-  #figure(caption: "An outdated univerity logo", 
-   image("../images/goe_logo_small.jpg", width: 50pt)
+  #figure(caption: "The modern university logo", 
+   image("../images/ugo-logo.svg", width: 100pt)
   )
-  <fig:old_uni_logo>
+  <fig:uni_logo>
   ```
 ], [
-  #figure(caption: "An outdated univerity logo", 
-   image("../images/goe_logo_small.jpg", width: 50pt)
+  #figure(caption: "The modern university logo", 
+   image("../images/ugo-logo.svg", width: 100pt)
   )
-  <fig:old_uni_logo>
+  <fig:uni_logo>
 ])
 
-Relative units (`em`, `pt` are relative to text size and `%` is relative to the available space) are generally prefered for `width`. If you include labels like `<fig:old_uni_logo>` with your figures, you can easily reference e.g. as "@fig:old_uni_logo" by writing `@fig:old_uni_logo`.
+Relative units (`em`, `pt` are relative to text size and `%` is relative to the available space) are generally prefered for `width`. If you include labels like `<fig:uni_logo>` with your figures, you can easily reference e.g. as "@fig:uni_logo" by writing `@fig:uni_logo`.
 
 === Citing
 <citing>
