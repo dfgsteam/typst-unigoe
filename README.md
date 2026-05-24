@@ -1,87 +1,81 @@
-# Dynamic & Customizable Typst Thesis Template
-for Georg-August-Universität Göttingen (and other Universities/Faculties)
+# 🎓 Dynamic & Customizable Typst Thesis, Seminar & Exposé Template
+### For Georg-August-Universität Göttingen (and other Universities/Faculties)
 
-This is a highly dynamic and customizable **unofficial Typst template** for writing Bachelor's and Master's theses. 
+This repository provides a modern, highly flexible, and **unofficial Typst template** for writing Bachelor's/Master's theses, seminar papers, or exposés (research proposals). 
 
-## Credits & Attribution
-
-This project is a **fork** of the excellent unofficial Typst template for Computer Science and Data Science at Göttingen, originally created by **Lorenz Glißmann**. 
-* Original Creator: [Lorenz Glißmann](https://gitlab.gwdg.de/glissmann/thesis-template)
-* Original Repository: [gitlab.gwdg.de/glissmann/ugoe-cs-ds-typst-thesis](https://gitlab.gwdg.de/glissmann/ugoe-cs-ds-typst-thesis)
-
-This fork extends the original design by making all elements (logos, departments, contact pages, localized titles, and cities) completely dynamic and customizable, allowing it to be easily adapted for other faculties (e.g., Physics, Chemistry, Economics) or other universities entirely, while retaining the beautiful original CS/DS style presets as the out-of-the-box defaults.
+This project is a **fork and extension** of the excellent unofficial Typst template for Computer Science and Data Science at Göttingen, originally created by [Lorenz Glißmann](https://gitlab.gwdg.de/glissmann/thesis-template). It extends the original design by making branding elements, degree presets, frontmatter layouts, and contact details completely dynamic, allowing it to be easily adapted for any university, faculty, or short-form academic paper.
 
 ---
 
-## Why Typst?
+## 🌟 Key Features
 
-> Typst is like LaTeX but simpler, easier, faster, smaller, based on 40 years of experience but without 40 years of technical decisions. With a syntax reminiscent of Markdown, you can get going within minutes, without much learning nor painful debugging.
-
-Our goals with this template are simple:
-- **Make writing a thesis fun and easy.**
-- **Get you going immediately.** No lengthy onboarding and no cleaning up later.
-- **Dynamic Adaptability:** Easily switch between different faculties, universities, or customize branding elements without touching the core styling logic.
-- **Drop-in replacement:** Mimic the look and feel of existing templates.
-    - The `legacy` preset mimics [the official template from the CS institute](https://uni-goettingen.de/de/626775.html). This is optimized for double-sided printing.
-    - The `modern` preset loosely mimics the modern screen-optimized layout.
-- **Keep everything hackable / fixable:** It's your thesis after all. Unlike LaTeX, fixing stuff is quite reasonable.
-- **Stand-alone and archivable:** Your thesis repo should include everything to reproduce your thesis as you wrote it.
+* 🏫 **Comprehensive Formats**: Built-in, localized presets for **Master's Theses**, **Bachelor's Theses**, **Seminar Papers**, and **Exposés** in both **German** (`de`) and **English** (`en`).
+* 🛠️ **Interactive Setup Wizard**: Configure your entire project in seconds by running `python3 setup.py`.
+* 🖊️ **Draft & Smart Todo Mode**: Enable `draft: true` to display a subtle `DRAFT` watermark across all pages and render custom `#todo("...")` blocks. Setting `draft: false` hides all watermark and todo boxes automatically for a clean final release.
+* 📑 **Multi-Language Abstracts**: Pass a dictionary of abstracts (e.g. `(de: include "...", en: include "...")`) to automatically generate consecutive English and German abstract pages with correct localized headings.
+* 📖 **Fully Optional Frontmatter**: Hide the Table of Contents (`show_outline: false`), skip the declaration page (`declaration: none`), or omit the contact page (`contact: none`) to perfectly suit short seminar papers or exposés.
+* 📌 **Clean Appendix & Bibliography**: The bibliography compiles in standard format, while the appendix-specific formatting (e.g., heading numbering `A` and `Appendix A - 1` footers) only triggers if an `appendix` is actually supplied.
+* ⚡ **CI/CD Automated Release Pipeline**: The repository is fully optimized to be slim and binary-free. All generated PDFs are ignored locally, and a **GitHub Actions Release Pipeline** compiles and attaches the compiled PDFs (`main.pdf` and `example.pdf`) directly to the GitHub Release on every pushed version tag (`v*`)!
 
 ---
 
-## Dynamic Customization Options
+## 📂 Repository Layout
 
-You can customize almost every aspect of the thesis via the `config` dictionary in `main.typ`:
+```bash
+├── main.typ          # Clean, ready-to-write starter document
+├── example.typ       # Feature-rich preview showcase (compiled with draft mode on)
+├── setup.py          # Interactive Python wizard to configure main.typ
+├── Makefile          # Commands for local compilation and watching
+├── lib/
+│   ├── presets.typ   # Built-in German and English presets for all document types
+│   ├── thesis.typ    # Main document layout, draft state, and todo logic
+│   ├── style_*.typ   # Modern (screen-optimized) and Legacy (book-style) formats
+│   └── pages/        # Dynamic layouts for title page, contact, declaration, abstract
+├── content/
+│   ├── content*.typ  # Actual chapter source files
+│   ├── template.typ  # Comprehensive template guide showing math, figures, and formatting
+│   ├── references.bib# Bibliography references in bibtex format
+│   └── *.typ         # Abstract and declaration source files
+└── images/           # Logos and branding assets
+```
 
-1. **Faculties & Institutions:**
-   You can easily override individual preset translations (like `institution` or `university` name) directly in your configuration without redefining the preset:
-   ```typst
-   translations: (
-     institution: [Faculty of Physics \ Institute for Astrophysics],
-     university: "Georg-August-Universität Göttingen",
-   )
+---
+
+## 🚀 Getting Started
+
+### 1. Initialize Your Document
+Clone this repository and run the interactive setup script in your terminal:
+```bash
+python3 setup.py
+```
+The wizard will guide you through choosing your language, degree/paper format, title, author name, student ID, and supervisors, generating a clean `main.typ` file instantly.
+
+### 2. Local Compilation & Watching
+Compile your document locally using the provided `Makefile`:
+* **Compile main starter:** `make build` (Generates `main.pdf`)
+* **Compile feature example:** `make build-example` (Generates `example.pdf`)
+* **Live preview watching:** `make dev` (or `make dev-example`) watches files and recompiles instantly on save.
+
+> **Convenience Tip**: We highly recommend using VSCodium/VS Code with the [Tinymist Typst Extension](https://open-vsx.org/extension/myriad-dreamin/tinymist) for an outstanding live-rendering side-by-side editing experience.
+
+---
+
+## 🤖 GitHub Actions CI/CD Pipeline
+
+To keep your git history slim and fast, **pre-compiled binary PDFs are excluded from version control** (via `.gitignore`). 
+
+When you are ready to publish a new version of your work:
+1. Create a version tag and push it:
+   ```bash
+   git tag v1.0.0
+   git push origin v1.0.0
    ```
-
-2. **University Logo:**
-   Override the default logo by specifying `logo` and `logo_width` in the config:
-   ```typst
-   logo: "/images/custom_logo.svg",
-   logo_width: 5cm,
-   ```
-
-3. **Custom Contact Page:**
-   The contact page is fully dynamic. If your faculty doesn't require a contact info page, you can disable it by setting `contact: none`. Otherwise, customize any details:
-   ```typst
-   contact: (
-     university: "Georg-August-Universität Göttingen",
-     address: [Friedrich-Hund-Platz 1 \ 37077 Göttingen \ Germany],
-     phone: "+49 (551) 39-XXXX",
-     email: "dekanat@physik.uni-goettingen.de",
-     website: "www.physik.uni-goettingen.de",
-   )
-   ```
-
-4. **Localization:**
-   Abstract titles, bibliography titles, and cities are automatically localized based on the selected language (`lang: "de"` or `"en"`), and can also be overridden individually.
+2. The **GitHub Release Workflow** will automatically trigger, checkout the repository, install Typst, compile both `main.typ` and `example.typ`, and attach `main.pdf` and `example.pdf` as assets to a new GitHub Release.
 
 ---
 
-## Getting started
+## 📜 License
 
-1. Clone your fork of this repository.
-2. Run `make dev` to start hot-reloading compilation.
-3. Open `main.typ` in your favorite text editor. Change something, save and `main.pdf` should automatically refresh.
+The license for this template is **CC0 1.0 Universal** (Public Domain), allowing you to modify, distribute, and use it freely for any purpose. 
 
-A very convenient setup is VSCodium + [Tinymist Extension](https://open-vsx.org/extension/myriad-dreamin/tinymist).
-
----
-
-## Attributions
-
-- “Scroll” icon by Garis Tanam from [Noun Project](https://thenounproject.com/browse/icons/term/scroll/) CC BY 3.0 (Modified by changing color, inserting text, and slightly moving the quill).
-
----
-
-## License
-
-The license for this template is CC0 1.0 but only applies to files where explicitly specified to avoid CC0 becoming the license of your thesis by accident. See the individual files and directories for more information.
+*(Attribution to Lorenz Glißmann's original institute template is highly appreciated!)*

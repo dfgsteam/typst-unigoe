@@ -1,0 +1,38 @@
+name: Build and Release Typst PDFs
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Typst
+        uses: taiki-e/install-action@v2
+        with:
+          tool: typst
+
+      - name: Compile PDF Documents
+        run: |
+          make build
+          if [ -f example.typ ]; then
+            make build-example
+          fi
+
+      - name: Create GitHub Release and Upload Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            main.pdf
+            example.pdf
+          fail_on_unmatched_files: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

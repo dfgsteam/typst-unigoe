@@ -78,23 +78,25 @@
   v(.5em, weak: true)
   line(stroke: .7pt, length: 100%)
 }
-// style footer. this get's applied after the introductory pages
 #let footer(ctx) = {
   line(stroke: 0.7pt, length: 100%)
     v(.5em, weak: true)
 
   grid(columns: (auto, auto, auto), column-gutter: (1fr, 1fr),
-    // [#context query(selector(heading).before(here())).filter(x => x.level == 1).at(-1)],
     [#context {
-      let selector = query(selector(heading).before(here())).at(-1, default: none)
-      if selector == none {
+      let headings = query(selector(heading).before(here()))
+      let ch_heading = headings.filter(h => h.level == 1).at(-1, default: none)
+      if ch_heading == none {
         return none
       }
-      let level = counter(heading).at(selector.location()).first()
-      [#ctx.translations.chapter #level]
+      if ch_heading.numbering != none {
+        let level = counter(heading).at(ch_heading.location()).first()
+        [#ctx.translations.chapter #level]
+      } else {
+        ch_heading.body
+      }
     }],
     ctx.author,
     counter(page).display("1"),
   )
-  
 }

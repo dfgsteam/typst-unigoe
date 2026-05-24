@@ -105,6 +105,12 @@ def main():
     draft = "true" if draft_choice.lower().startswith("y") else "false"
 
     print()
+    if os.path.exists("main.typ"):
+        overwrite = prompt("main.typ already exists. Overwrite? / main.typ existiert bereits. Überschreiben? (y/n)", "y")
+        if not overwrite.lower().startswith("y"):
+            print("Aborted. No files were changed. / Abgebrochen. Es wurden keine Dateien geändert.")
+            sys.exit(0)
+
     print("Generating main.typ... / Erstelle main.typ...")
 
     # Determine abstract and declaration defaults
