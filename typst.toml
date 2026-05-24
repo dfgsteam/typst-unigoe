@@ -1,11 +1,14 @@
 [package]
-name = "cs-ugoe-thesis"
-version = "0.2.0"
+name = "typst-unigoe"
+version = "0.3.0"
 entrypoint = "main.typ"
-authors = ["Lorenz Glißmann <lorenz.glissmann@uni-goettingen.de>"]
+authors = [
+  "Lorenz Glißmann <lorenz.glissmann@uni-goettingen.de>",
+  "Julius Hunold <julius.hunold@stud.uni-goettingen.de>"
+]
 license = "MIT"
-description = "Inofficial thesis template for computer and data science at Georg-August-University Göttingen."
-repository = "https://gitlab.gwdg.de/glissmann/thesis-template"
+description = "A highly dynamic and customizable unofficial thesis template for Georg-August-Universität Göttingen, supporting multiple faculties. Forked from Lorenz Glißmann's CS/DS template."
+repository = "https://github.com/dfgsteam/typst-unigoe"
 exclude = ["content"]
 
 [template]

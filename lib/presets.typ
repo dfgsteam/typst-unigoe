@@ -7,7 +7,6 @@
   translations: (
     degree_text: "Bachelorarbeit",
     submitted_text: "im Studiengang",
-    course_of_study: "Angewandte Informatik",
     institution: "Institut für Informatik",
     university: "Bachelor- und Masterarbeiten
   an der Georg-August-Universität Göttingen
@@ -19,6 +18,9 @@
     subsection: "Abschnitt",
     subsubsection: "Unterabschnitt",
     outline_title: "Inhaltsverzeichnis",
+    abstract_title: "Zusammenfassung",
+    bibliography_title: "Literaturverzeichnis",
+    city: "Göttingen",
   ),
 )
 
@@ -39,6 +41,9 @@
     subsection: "Abschnitt",
     subsubsection: "Unterabschnitt",
     outline_title: "Inhaltsverzeichnis",
+    abstract_title: "Zusammenfassung",
+    bibliography_title: "Literaturverzeichnis",
+    city: "Göttingen",
   ),
 )
 
@@ -59,6 +64,9 @@
     subsection: "Subsection",
     subsubsection: "Subsubsection",
     outline_title: "Contents",
+    abstract_title: "Abstract",
+    bibliography_title: "Bibliography",
+    city: "Göttingen",
   ),
 )
 
@@ -67,7 +75,7 @@
   degree_type: "master",
   translations: (
     degree_text: "Master's Thesis",
-    submitted_text: "submitted in partial fulfillment of therequirements\nfor the course",
+    submitted_text: "submitted in partial fulfillment of the requirements\nfor the course",
     institution: "Institute of Computer Science",
     university: "Bachelor's and Master's Theses
   at Georg-August-Universität Göttingen
@@ -79,5 +87,8 @@
     subsection: "Subsection",
     subsubsection: "Subsubsection",
     outline_title: "Contents",
+    abstract_title: "Abstract",
+    bibliography_title: "Bibliography",
+    city: "Göttingen",
   ),
 )

@@ -8,7 +8,11 @@
       #grid(
         columns: 1fr,
         row-gutter: (1fr, 1fr, 1fr, 1fr, .5fr, 1fr),
-        align(left)[#image("../../images/goe-logo.jpg", width: 6.5cm)],
+        align(left)[
+          #if config.logo != none {
+            image(config.logo, width: config.logo_width)
+          }
+        ],
         [
           #text(size: 20pt, weight: "bold", config.translations.degree_text + "\n")
           #config.translations.submitted_text "#config.course_of_study"

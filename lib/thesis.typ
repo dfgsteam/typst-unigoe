@@ -2,6 +2,7 @@
 // Creative Commons Zero v1.0 Universal
 
 #import "./pages/prelude.typ": prelude
+#import "./presets.typ"
 
 #let thesis(
   config: none,
@@ -13,9 +14,6 @@
   appendix: none,
 ) = {
   // validate and clean up arguments
-  if config.date == none {
-    config.date = datetime.today().display("[year]-[month repr:long]-[day]")
-  }
   assert(
     config.lang == "de" or config.lang == "en",
     message: "Only german (de) and english (en) are supported as document languages (lang).",
@@ -25,16 +23,59 @@
     message: "Please set degree_type to either bachelor or master.",
   )
 
+  // dynamic configuration merging
+  let default_preset = if config.lang == "de" {
+    if config.degree_type == "bachelor" { presets.de_bachelor } else { presets.de_master }
+  } else {
+    if config.degree_type == "bachelor" { presets.en_bachelor } else { presets.en_master }
+  }
+
+  let merged_translations = default_preset.translations + config.at("translations", default: (:))
+
+  let default_contact = (
+    university: "Georg-August-Universität Göttingen",
+    address: [Goldschmidtstraße 7\ 37077 Göttingen\ Germany],
+    phone: "+49 (551) 39-172000",
+    fax: "+49 (551) 39-14403",
+    email: "office@informatik.uni-goettingen.de",
+    website: "www.informatik.uni-goettingen.de",
+  )
+
+  let contact = if "contact" in config {
+    if config.contact == none {
+      none
+    } else {
+      default_contact + config.contact
+    }
+  } else {
+    default_contact
+  }
+
+  let logo = config.at("logo", default: "/images/goe-logo.jpg")
+  let logo_width = config.at("logo_width", default: 6.5cm)
+
+  let date = config.at("date", default: none)
+  if date == none {
+    date = datetime.today().display("[year]-[month repr:long]-[day]")
+  }
+
+  let full_config = config
+  full_config.insert("date", date)
+  full_config.insert("translations", merged_translations)
+  full_config.insert("contact", contact)
+  full_config.insert("logo", logo)
+  full_config.insert("logo_width", logo_width)
+
   // set documents properties
-  set document(author: config.author, title: config.title, date: datetime.today())
+  set document(author: full_config.author, title: full_config.title, date: datetime.today())
   // set document language
-  set text(lang: config.lang)
+  set text(lang: full_config.lang)
 
   // apply a style preset
   let apply_style
   let footer
   let header
-  if config.style == "legacy" {
+  if full_config.style == "legacy" {
     import "/lib/style_legacy.typ"
     apply_style = style_legacy.apply_style
     footer = style_legacy.footer
@@ -45,15 +86,15 @@
     footer = style_modern.footer
     header = style_modern.header
   }
-  show: apply_style.with(lang: config.lang, translations: config.translations)
+  show: apply_style.with(lang: full_config.lang, translations: full_config.translations)
 
   // import the first few pages (title page, contact info, declaration, abstract, outline)
-  prelude(config: config, abstract: abstract, declaration: declaration)
+  prelude(config: full_config, abstract: abstract, declaration: declaration)
 
   // enable page numbering
   set page(numbering: "1")
   counter(page).update(1)
-  let ctx = (title: config.title, author: config.author, translations: config.translations);
+  let ctx = (title: full_config.title, author: full_config.author, translations: full_config.translations);
   set page(footer: context footer(ctx), header: context header(ctx))
 
   // include the actual contents
@@ -72,7 +113,7 @@
   // set page(numbering: "I")
   //Bibliography
   if bibliography != none {
-    heading("Bibliography")
+    heading(full_config.translations.bibliography_title)
     v(1em)
     bibliography
   }

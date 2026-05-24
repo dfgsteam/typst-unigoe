@@ -7,7 +7,7 @@
       #heading(
         outlined: false,
         numbering: none,
-        text(1em, weight: "bold")[Abstract],
+        text(1em, weight: "bold")[#config.translations.abstract_title],
       )
     ]
     v(5pt)

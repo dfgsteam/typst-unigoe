@@ -12,7 +12,7 @@
       ]
       #if config.style != "legacy" [
         #v(0.2cm)
-        Göttingen, #config.date
+        #config.translations.city, #config.date
       ]
     ],
   )
