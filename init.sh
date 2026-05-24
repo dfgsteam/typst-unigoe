@@ -8,7 +8,7 @@ echo "    Typst Georg-August-Universität Göttingen Bootstrap   "
 echo "========================================================="
 echo ""
 
-read -p "Enter project directory name / Projektordner Name (press Enter for 'my-thesis' or type '.' for current directory): " DEST_DIR
+read -p "Enter project directory name / Projektordner Name (press Enter for 'my-thesis' or type '.' for current directory): " DEST_DIR < /dev/tty
 DEST_DIR=${DEST_DIR:-my-thesis}
 
 if [ "$DEST_DIR" = "." ]; then
@@ -16,7 +16,7 @@ if [ "$DEST_DIR" = "." ]; then
   # Check if directory contains non-git files
   if [ "$(ls -A | grep -v '^\.git$')" ]; then
     echo "Warning: Current directory contains files. / Warnung: Aktuelles Verzeichnis enthält Dateien."
-    read -p "Do you want to proceed? / Trotzdem fortfahren? (y/n): " PROCEED
+    read -p "Do you want to proceed? / Trotzdem fortfahren? (y/n): " PROCEED < /dev/tty
     if [[ ! "$PROCEED" =~ ^[Yy]$ ]]; then
       echo "Aborted."
       exit 0
@@ -60,4 +60,4 @@ chmod +x setup.py
 
 echo ""
 echo "Starting interactive setup... / Starte interaktive Einrichtung..."
-python3 setup.py
+python3 setup.py < /dev/tty
