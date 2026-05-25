@@ -281,6 +281,11 @@ def main():
         app_file = prompt("Appendix file path / Pfad zur Anhangsdatei", preferred_app)
         app_file_val = f'include "{escape_quotes(app_file)}"'
         
+    # 8e. Table of Contents Roman page inclusion
+    # Default: No
+    include_roman_choice = prompt("Include introductory pages (Declaration, Abstract, Acronyms) in Table of Contents? / Einleitende Seiten (Erklärung, Zusammenfassung, Abkürzungen) im Inhaltsverzeichnis aufführen? (y/n)", "n")
+    outline_roman_pages = "true" if include_roman_choice.lower().startswith("y") else "false"
+
     print()
 
     if os.path.exists("main.typ"):
@@ -367,6 +372,9 @@ def main():
     // Platzierung der Selbstständigkeits- und KI-Erklärung ("beginning" oder "end")
     declaration_position: "{declaration_pos}",
     declaration_ai_position: "{declaration_ai_pos}",
+    
+    // Sollen einleitende römische Seiten im Inhaltsverzeichnis aufgeführt werden?
+    outline_roman_pages: {outline_roman_pages},
     
     // Custom Translations / Branding override (Dynamically configured)
     translations: (

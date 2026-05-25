@@ -51,7 +51,7 @@
   // List of Abbreviations (Acronyms)
   if acronyms != none and acronyms.len() > 0 {
     let title = if config.lang == "de" { "Abkürzungsverzeichnis" } else { "List of Abbreviations" }
-    heading(level: 1, numbering: none, outlined: true)[#title]
+    heading(level: 1, numbering: none, outlined: config.at("outline_roman_pages", default: false))[#title]
     v(1.5em)
     grid(
       columns: (3cm, 1fr),

@@ -3,7 +3,7 @@
 
 #let declarationpage(config: none, title: none, declaration: none) = {
   if title != none {
-    heading(level: 1, numbering: none, outlined: false)[#title]
+    heading(level: 1, numbering: none, outlined: config.at("outline_roman_pages", default: false))[#title]
     v(1.5em)
   }
   if declaration != none [

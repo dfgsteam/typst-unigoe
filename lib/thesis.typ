@@ -151,9 +151,10 @@
   // set page background watermark in draft mode
   set page(background: context {
     if draft_state.get() {
+      let watermark = if full_config.lang == "de" { "ENTWURF" } else { "DRAFT" }
       align(center + horizon)[
         #rotate(45deg)[
-          #text(80pt, fill: rgb(220, 220, 220, 40%), weight: "bold")[DRAFT]
+          #text(80pt, fill: rgb(220, 220, 220, 40%), weight: "bold")[#watermark]
         ]
       ]
     }

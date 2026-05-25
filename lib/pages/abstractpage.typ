@@ -8,7 +8,7 @@
         let title = if lang_key == "de" { "Zusammenfassung" } else if lang_key == "en" { "Abstract" } else { config.translations.abstract_title }
         align(center)[
           #heading(
-            outlined: false,
+            outlined: config.at("outline_roman_pages", default: false),
             numbering: none,
             text(1em, weight: "bold")[#title],
           )
@@ -20,7 +20,7 @@
     } else {
       align(center)[
         #heading(
-          outlined: false,
+          outlined: config.at("outline_roman_pages", default: false),
           numbering: none,
           text(1em, weight: "bold")[#config.translations.abstract_title],
         )
