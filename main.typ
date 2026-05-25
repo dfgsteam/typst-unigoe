@@ -58,6 +58,9 @@
   // Selbstständigkeitserklärung (auf none setzen, falls nicht benötigt, z. B. bei Exposés)
   declaration: include "content/declaration_de.typ",
 
+  // Erklärung zur Verwendung von KI (auf none setzen, falls nicht benötigt)
+  // declaration_ai: include "content/declaration_ai_de.typ",
+
   // Abkürzungen (optional, zum Aktivieren auskommentieren und anpassen)
   // acronyms: (
   //   API: ("Application Programming Interface", "Schnittstelle zur Anwendungsprogrammierung"),

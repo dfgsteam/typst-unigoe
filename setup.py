@@ -123,7 +123,45 @@ def main():
     draft_choice = prompt("Enable draft mode (DRAFT watermark & show todo boxes)? / Entwurfsmodus aktivieren (Wasserzeichen & Todos anzeigen)? (y/n)", "n")
     draft = "true" if draft_choice.lower().startswith("y") else "false"
 
+    # 6. Optional Pages and Sections / Optionale Seiten und Abschnitte
+    print("6. Optional Pages and Sections / Optionale Seiten und Abschnitte")
+    
+    # 6a. Standard Declaration of Independence
+    # Default: Yes for thesis, No for seminar/expose
+    default_decl_opt = "n" if degree_type in ("expose", "seminar") else "y"
+    include_decl_choice = prompt("Include a Declaration of Independence? / Selbstständigkeitserklärung einbinden? (y/n)", default_decl_opt)
+    include_declaration = include_decl_choice.lower().startswith("y")
+    
+    # 6b. AI Declaration (KI-Erklärung)
+    # Default: Yes for thesis, No for seminar/expose
+    default_ai_opt = "n" if degree_type in ("expose", "seminar") else "y"
+    include_ai_choice = prompt("Include a Declaration on the use of AI? / Erklärung zur KI-Nutzung einbinden? (y/n)", default_ai_opt)
+    include_ai_decl = include_ai_choice.lower().startswith("y")
+    
+    # 6c. Bibliography (Literaturverzeichnis)
+    # Default: Yes
+    include_bibliography = prompt("Include a Bibliography? / Literaturverzeichnis einbinden? (y/n)", "y").lower().startswith("y")
+    
+    bib_file_val = "none"
+    bib_style_val = "ieee"
+    if include_bibliography:
+        bib_file = prompt("Bibliography file path / Pfad zur Literaturdatenbank", "content/references.bib")
+        bib_style = prompt("Bibliography style / Zitierstil (e.g. ieee, apa, mla, chicago)", "ieee")
+        bib_file_val = f'"{escape_quotes(bib_file)}"'
+        bib_style_val = f'"{escape_quotes(bib_style)}"'
+        
+    # 6d. Appendix (Anhang)
+    # Default: No
+    include_appendix = prompt("Include an Appendix? / Anhang einbinden? (y/n)", "n").lower().startswith("y")
+    
+    app_file_val = "none"
+    if include_appendix:
+        preferred_app = "content/appendix.typ"
+        app_file = prompt("Appendix file path / Pfad zur Anhangsdatei", preferred_app)
+        app_file_val = f'include "{escape_quotes(app_file)}"'
+        
     print()
+
     if os.path.exists("main.typ"):
         overwrite = prompt("main.typ already exists. Overwrite? / main.typ existiert bereits. Überschreiben? (y/n)", "y")
         if not overwrite.lower().startswith("y"):
@@ -141,17 +179,24 @@ def main():
     fallback_decl = "content/declaration.typ" if lang == "de" else "content/declaration_de.typ"
     declaration_file = get_existing_file(preferred_decl, fallback_decl)
 
+    preferred_ai = "content/declaration_ai_de.typ" if lang == "de" else "content/declaration_ai.typ"
+    fallback_ai = "content/declaration_ai.typ" if lang == "de" else "content/declaration_ai_de.typ"
+    declaration_ai_file = get_existing_file(preferred_ai, fallback_ai)
+
     preferred_content = "content/content_de.typ" if lang == "de" else "content/content.typ"
     fallback_content = "content/content.typ" if lang == "de" else "content/content_de.typ"
     content_file = get_existing_file(preferred_content, fallback_content)
 
-    # For exposé, declaration is usually none
-    if degree_type == "expose":
-        declaration_val = "none"
-        outline_val = "show_outline: false,"
+    # For exposé, declaration is usually none and outline false by default
+    outline_val = "show_outline: false," if degree_type == "expose" else "// show_outline: true,"
+
+    declaration_val = f'include "{declaration_file}"' if include_declaration else "none"
+    declaration_ai_val = f'include "{declaration_ai_file}"' if include_ai_decl else "none"
+
+    if include_bibliography:
+        bibliography_val = f'bibliography({bib_file_val}, style: {bib_style_val}, title: none)'
     else:
-        declaration_val = f'include "{declaration_file}"'
-        outline_val = "// show_outline: true,"
+        bibliography_val = "none"
 
     main_content = f"""#import "/lib/thesis.typ": thesis, todo, acr
 #import "/lib/presets.typ"
@@ -201,7 +246,7 @@ def main():
     // Set contact to none to disable the contact info page entirely, or override specific fields:
     // contact: (
     //   university: "Georg-August-Universität Göttingen",
-    //   address: [Goldschmidtstraße 7\\ 37077 Göttingen\\ Germany],
+    //   address: [Goldschmidtstraße 7\\\\ 37077 Göttingen\\\\ Germany],
     //   phone: "+49 (551) 39-172000",
     //   fax: "+49 (551) 39-14403",
     //   email: "office@informatik.uni-goettingen.de",
@@ -216,6 +261,9 @@ def main():
   // Declaration of independence (Set to none to omit it entirely, e.g. for seminar papers or exposés)
   declaration: {declaration_val},
 
+  // Declaration on the use of AI / Erklärung zur Verwendung von KI (Set to none to omit it entirely)
+  declaration_ai: {declaration_ai_val},
+
   // Acronyms dictionary (optional)
   // Define your acronyms here: (Key: (English definition, German definition))
   // acronyms: (
@@ -229,14 +277,10 @@ def main():
   ),
   
   // Bibliography (Set to none to omit it)
-  bibliography: bibliography(
-    "content/references.bib",
-    style: "ieee",
-    title: none,
-  ),
+  bibliography: {bibliography_val},
   
   // Appendix (Set to none to omit it)
-  // appendix: include "content/appendix.typ",
+  appendix: {app_file_val},
 )
 """
 

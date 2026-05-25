@@ -64,6 +64,7 @@
   titlepage: none,
   abstract: none,
   declaration: none,
+  declaration_ai: none,
   acronyms: none,
   chapters: none,
   bibliography: none,
@@ -173,7 +174,7 @@
   })
 
   // import the first few pages (title page, contact info, declaration, abstract, outline)
-  prelude(config: full_config, abstract: abstract, declaration: declaration, acronyms: acronyms)
+  prelude(config: full_config, abstract: abstract, declaration: declaration, declaration_ai: declaration_ai, acronyms: acronyms)
 
   // enable page numbering
   set page(numbering: "1")

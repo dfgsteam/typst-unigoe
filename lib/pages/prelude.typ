@@ -11,6 +11,7 @@
   config: none,
   abstract: none,
   declaration: none,
+  declaration_ai: none,
   acronyms: none,
 ) = {
   // disable page numbering for the first few pages
@@ -28,6 +29,11 @@
   // Declaration
   if declaration != none {
     declarationpage(config: config, declaration: declaration)
+  }
+
+  // AI Declaration
+  if declaration_ai != none {
+    declarationpage(config: config, declaration: declaration_ai)
   }
 
   // Abstract page

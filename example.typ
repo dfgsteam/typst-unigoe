@@ -62,6 +62,8 @@
   
   declaration: include "content/declaration.typ",
 
+  declaration_ai: include "content/declaration_ai.typ",
+
   acronyms: (
     API: ("Application Programming Interface", "Schnittstelle zur Anwendungsprogrammierung"),
     REST: ("Representational State Transfer", "Zustandsloser Architekturstil"),
