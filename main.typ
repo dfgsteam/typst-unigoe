@@ -1,9 +1,7 @@
 #import "/lib/thesis.typ": thesis, todo, acr
-#import "/lib/presets.typ"
 
 #thesis(
   config: (
-    ..presets.de_master, // Choose from: de_bachelor, de_master, en_bachelor, en_master, de_seminar, en_seminar, de_expose, en_expose
     
     // Core details
     title: "Titel der Arbeit",
@@ -33,12 +31,16 @@
     // Inhaltsverzeichnis (auf false setzen, um das Verzeichnis auszublenden, z. B. bei Exposés)
     // show_outline: true,
     
+    // Platzierung der Selbstständigkeits- und KI-Erklärung ("beginning" oder "end")
+    declaration_position: "beginning",
+    declaration_ai_position: "beginning",
+    
     // Eigene Übersetzungs- und Marken-Overrides
-    // translations: (
-    //   institution: "Institut für Informatik",
-    //   university: "Georg-August-Universität Göttingen",
-    //   city: "Göttingen",
-    // ),
+    translations: (
+      institution: "Institut für Informatik",
+      university: "Georg-August-Universität Göttingen",
+      city: "Göttingen",
+    ),
     
     // Custom Kontakt-Seite (Standardmäßig aktiviert, zum Deaktivieren auf none setzen)
     // contact: (
@@ -73,11 +75,7 @@
   ),
   
   // Literaturverzeichnis (auf none setzen, falls nicht benötigt)
-  bibliography: bibliography(
-    "content/references.bib",
-    style: "ieee",
-    title: none,
-  ),
+  bibliography: bibliography("content/references.bib", style: "ieee", title: none),
   
   // Anhang (auf none setzen, falls nicht benötigt)
   // appendix: include "content/appendix.typ",

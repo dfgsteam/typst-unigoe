@@ -2,7 +2,7 @@
 // Creative Commons Zero v1.0 Universal
 
 #import "./pages/prelude.typ": prelude
-#import "./presets.typ"
+#import "./pages/declarationpage.typ": declarationpage
 
 #let draft_state = state("draft", false)
 
@@ -75,26 +75,12 @@
 
   // validate and clean up arguments
   assert(
-    config.lang == "de" or config.lang == "en",
-    message: "Only german (de) and english (en) are supported as document languages (lang).",
-  )
-  assert(
-    config.degree_type in ("bachelor", "master", "seminar", "expose"),
-    message: "Please set degree_type to one of: bachelor, master, seminar, expose.",
+    config.lang != none and config.degree_type != none,
+    message: "Please specify both lang and degree_type in your configuration.",
   )
 
-  // dynamic configuration merging
-  let default_preset = if config.lang == "de" {
-    if config.degree_type == "bachelor" { presets.de_bachelor }
-    else if config.degree_type == "master" { presets.de_master }
-    else if config.degree_type == "seminar" { presets.de_seminar }
-    else { presets.de_expose }
-  } else {
-    if config.degree_type == "bachelor" { presets.en_bachelor }
-    else if config.degree_type == "master" { presets.en_master }
-    else if config.degree_type == "seminar" { presets.en_seminar }
-    else { presets.en_expose }
-  }
+  // dynamic configuration merging from JSON presets directory
+  let default_preset = json("/presets/" + config.lang + "_" + config.degree_type + ".json")
 
   let merged_translations = default_preset.translations + config.at("translations", default: (:))
 
@@ -207,6 +193,27 @@
       align(center, [#app_text #head_disp - #counter(page).display("1")])
     })
     appendix
+  }
+
+  // Declarations at the end (only rendered if their position is configured to "end")
+  let has_end_decl = (
+    (declaration != none and full_config.at("declaration_position", default: "beginning") == "end") or
+    (declaration_ai != none and full_config.at("declaration_ai_position", default: "beginning") == "end")
+  )
+
+  if has_end_decl {
+    pagebreak()
+    set page(numbering: "I", header: none, footer: context align(center, counter(page).display("I")))
+    
+    if declaration != none and full_config.at("declaration_position", default: "beginning") == "end" {
+      let title = full_config.translations.at("declaration_title", default: if full_config.lang == "de" { "Selbstständigkeitserklärung" } else { "Declaration of Authorship" })
+      declarationpage(config: full_config, title: title, declaration: declaration)
+    }
+    
+    if declaration_ai != none and full_config.at("declaration_ai_position", default: "beginning") == "end" {
+      let title = full_config.translations.at("declaration_ai_title", default: if full_config.lang == "de" { "Erklärung zur Verwendung von KI" } else { "Declaration on the Use of AI" })
+      declarationpage(config: full_config, title: title, declaration: declaration_ai)
+    }
   }
 
   // Todo list at the very end (only visible in draft mode)

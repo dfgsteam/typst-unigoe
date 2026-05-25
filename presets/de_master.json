@@ -1,0 +1,24 @@
+{
+  "lang": "de",
+  "degree_type": "master",
+  "name_de": "Masterarbeit (Deutsch)",
+  "name_en": "Master's Thesis (German)",
+  "translations": {
+    "degree_text": "Masterarbeit",
+    "submitted_text": "im Studiengang",
+    "institution": "Institut für Informatik",
+    "university": "Bachelor- und Masterarbeiten\\nan der Georg-August-Universität Göttingen\\nISSN 1612-6793",
+    "firstsupervisor_text": "Erstbetreuer*in",
+    "secondsupervisor_text": "Zweitbetreuer*in",
+    "chapter": "Kapitel",
+    "section": "Unterkapitel",
+    "subsection": "Abschnitt",
+    "subsubsection": "Unterabschnitt",
+    "outline_title": "Inhaltsverzeichnis",
+    "abstract_title": "Zusammenfassung",
+    "bibliography_title": "Literaturverzeichnis",
+    "city": "Göttingen",
+    "student_id_text": "Matrikelnummer",
+    "appendix_text": "Anhang"
+  }
+}

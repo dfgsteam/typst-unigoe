@@ -1,0 +1,24 @@
+{
+  "lang": "en",
+  "degree_type": "master",
+  "name_de": "Masterarbeit (Englisch)",
+  "name_en": "Master's Thesis (English)",
+  "translations": {
+    "degree_text": "Master's Thesis",
+    "submitted_text": "submitted in partial fulfillment of the requirements\nfor the course",
+    "institution": "Institute of Computer Science",
+    "university": "Bachelor's and Master's Theses\nat Georg-August-Universität Göttingen\nISSN 1612-6793",
+    "firstsupervisor_text": "First Supervisor",
+    "secondsupervisor_text": "Second Supervisor",
+    "chapter": "Chapter",
+    "section": "Section",
+    "subsection": "Subsection",
+    "subsubsection": "Subsubsection",
+    "outline_title": "Contents",
+    "abstract_title": "Abstract",
+    "bibliography_title": "Bibliography",
+    "city": "Göttingen",
+    "student_id_text": "Student ID",
+    "appendix_text": "Appendix"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "lang": "de",
+  "degree_type": "seminar",
+  "name_de": "Seminararbeit (Deutsch)",
+  "name_en": "Seminar Paper (German)",
+  "translations": {
+    "degree_text": "Seminararbeit",
+    "submitted_text": "im Seminar",
+    "institution": "Institut für Informatik",
+    "university": "Georg-August-Universität Göttingen",
+    "firstsupervisor_text": "Dozent*in / Betreuer*in",
+    "secondsupervisor_text": "Betreuer*in",
+    "chapter": "Kapitel",
+    "section": "Unterkapitel",
+    "subsection": "Abschnitt",
+    "subsubsection": "Unterabschnitt",
+    "outline_title": "Inhaltsverzeichnis",
+    "abstract_title": "Zusammenfassung",
+    "bibliography_title": "Literaturverzeichnis",
+    "city": "Göttingen",
+    "student_id_text": "Matrikelnummer",
+    "appendix_text": "Anhang"
+  }
+}

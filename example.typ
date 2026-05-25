@@ -1,10 +1,7 @@
 #import "/lib/thesis.typ": thesis, todo, acr
-#import "/lib/presets.typ"
 
 #thesis(
   config: (
-    ..presets.en_master, // Choose from: de_bachelor, de_master, en_bachelor, en_master, de_seminar, en_seminar, de_expose, en_expose
-    
     // Core details
     title: "A Dynamic and Customizable Typst Template for Theses, Seminar Papers, and Exposés",
     subtitle: "A modern alternative to LaTeX for university students",
@@ -33,6 +30,10 @@
     // Custom Outline / Table of Contents
     // Set to false to hide the outline page completely (e.g. for exposés or short papers)
     // show_outline: true,
+    
+    // Position of Declaration of Independence and AI Declaration ("beginning" or "end")
+    declaration_position: "end",
+    declaration_ai_position: "end",
     
     // Custom Translations / Branding override
     // You can override individual preset fields without redefining the whole preset!

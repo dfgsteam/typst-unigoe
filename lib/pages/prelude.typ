@@ -27,13 +27,15 @@
   set page(numbering: "I")
 
   // Declaration
-  if declaration != none {
-    declarationpage(config: config, declaration: declaration)
+  if declaration != none and config.at("declaration_position", default: "beginning") == "beginning" {
+    let title = config.translations.at("declaration_title", default: if config.lang == "de" { "Selbstständigkeitserklärung" } else { "Declaration of Authorship" })
+    declarationpage(config: config, title: title, declaration: declaration)
   }
 
   // AI Declaration
-  if declaration_ai != none {
-    declarationpage(config: config, declaration: declaration_ai)
+  if declaration_ai != none and config.at("declaration_ai_position", default: "beginning") == "beginning" {
+    let title = config.translations.at("declaration_ai_title", default: if config.lang == "de" { "Erklärung zur Verwendung von KI" } else { "Declaration on the Use of AI" })
+    declarationpage(config: config, title: title, declaration: declaration_ai)
   }
 
   // Abstract page

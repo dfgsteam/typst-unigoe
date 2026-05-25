@@ -1,0 +1,24 @@
+{
+  "lang": "en",
+  "degree_type": "expose",
+  "name_de": "Exposé (Englisch)",
+  "name_en": "Exposé (English)",
+  "translations": {
+    "degree_text": "Exposé",
+    "submitted_text": "in preparation for the",
+    "institution": "Institute of Computer Science",
+    "university": "Georg-August-Universität Göttingen",
+    "firstsupervisor_text": "First Supervisor",
+    "secondsupervisor_text": "Second Supervisor",
+    "chapter": "Chapter",
+    "section": "Section",
+    "subsection": "Subsection",
+    "subsubsection": "Subsubsection",
+    "outline_title": "Contents",
+    "abstract_title": "Abstract",
+    "bibliography_title": "Bibliography",
+    "city": "Göttingen",
+    "student_id_text": "Student ID",
+    "appendix_text": "Appendix"
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "faculties": [
+    {
+      "id": "cs",
+      "name_de": "Institut für Informatik",
+      "name_en": "Institute of Computer Science",
+      "is_goe_cs": true,
+      "contact_de": {
+        "address": "Goldschmidtstraße 7\\n37077 Göttingen\\nDeutschland",
+        "phone": "+49 (551) 39-172000",
+        "fax": "+49 (551) 39-14403",
+        "email": "office@informatik.uni-goettingen.de",
+        "website": "www.informatik.uni-goettingen.de"
+      },
+      "contact_en": {
+        "address": "Goldschmidtstraße 7\\n37077 Göttingen\\nGermany",
+        "phone": "+49 (551) 39-172000",
+        "fax": "+49 (551) 39-14403",
+        "email": "office@informatik.uni-goettingen.de",
+        "website": "www.informatik.uni-goettingen.de"
+      }
+    },
+    {
+      "id": "math",
+      "name_de": "Mathematisches Institut",
+      "name_en": "Mathematical Institute",
+      "contact_de": {
+        "address": "Bunsenstraße 3-5\\n37073 Göttingen\\nDeutschland",
+        "phone": "+49 (551) 39-27751",
+        "fax": "+49 (551) 39-22985",
+        "email": "dekanat@math.uni-goettingen.de",
+        "website": "www.math.uni-goettingen.de"
+      },
+      "contact_en": {
+        "address": "Bunsenstraße 3-5\\n37073 Göttingen\\nGermany",
+        "phone": "+49 (551) 39-27751",
+        "fax": "+49 (551) 39-22985",
+        "email": "dekanat@math.uni-goettingen.de",
+        "website": "www.math.uni-goettingen.de"
+      }
+    },
+    {
+      "id": "physics",
+      "name_de": "Fakultät für Physik",
+      "name_en": "Faculty of Physics",
+      "contact_de": {
+        "address": "Friedrich-Hund-Platz 1\\n37077 Göttingen\\nDeutschland",
+        "phone": "+49 (551) 39-24095",
+        "email": "dekanat@physik.uni-goettingen.de",
+        "website": "www.physik.uni-goettingen.de"
+      },
+      "contact_en": {
+        "address": "Friedrich-Hund-Platz 1\\n37077 Göttingen\\nGermany",
+        "phone": "+49 (551) 39-24095",
+        "email": "dekanat@physik.uni-goettingen.de",
+        "website": "www.physik.uni-goettingen.de"
+      }
+    },
+    {
+      "id": "chemistry",
+      "name_de": "Fakultät für Chemie",
+      "name_en": "Faculty of Chemistry",
+      "contact_de": {
+        "address": "Tammannstraße 4\\n37077 Göttingen\\nDeutschland",
+        "phone": "+49 (551) 39-23111",
+        "email": "dekanat@chemie.uni-goettingen.de",
+        "website": "www.chemie.uni-goettingen.de"
+      },
+      "contact_en": {
+        "address": "Tammannstraße 4\\n37077 Göttingen\\nGermany",
+        "phone": "+49 (551) 39-23111",
+        "email": "dekanat@chemie.uni-goettingen.de",
+        "website": "www.chemie.uni-goettingen.de"
+      }
+    },
+    {
+      "id": "economics",
+      "name_de": "Wirtschaftswissenschaftliche Fakultät",
+      "name_en": "Faculty of Business and Economics",
+      "contact_de": {
+        "address": "Platz der Göttinger Sieben 3\\n37073 Göttingen\\nDeutschland",
+        "phone": "+49 (551) 39-27190",
+        "email": "dekanat@wiwi.uni-goettingen.de",
+        "website": "www.wiwi.uni-goettingen.de"
+      },
+      "contact_en": {
+        "address": "Platz der Göttinger Sieben 3\\n37073 Göttingen\\nGermany",
+        "phone": "+49 (551) 39-27190",
+        "email": "dekanat@wiwi.uni-goettingen.de",
+        "website": "www.wiwi.uni-goettingen.de"
+      }
+    }
+  ]
+}

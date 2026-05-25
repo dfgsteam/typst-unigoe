@@ -2,6 +2,7 @@
 import sys
 import subprocess
 import os
+import json
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -48,6 +49,16 @@ def main():
     print("Dieses Skript konfiguriert dein Projekt durch Erstellen einer angepassten 'main.typ'.")
     print()
 
+    # Load faculties from JSON
+    faculties_file = "presets/faculties.json"
+    faculties_data = []
+    if os.path.exists(faculties_file):
+        try:
+            with open(faculties_file, "r", encoding="utf-8") as f:
+                faculties_data = json.load(f).get("faculties", [])
+        except Exception as e:
+            print(f"Warning: Could not load faculties.json: {e}")
+
     # 1. Language
     print("1. Language / Sprache")
     print("   [1] German / Deutsch (default)")
@@ -87,8 +98,100 @@ def main():
 
     print()
 
-    # 4. Meta Details
-    print("4. Meta Details / Projektdaten")
+    # 4. University & Faculty / Universität & Fakultät
+    print("4. University & Faculty / Universität & Fakultät")
+    uni_name = prompt("University name / Name der Universität", "Georg-August-Universität Göttingen")
+    
+    print("   Choose Faculty/Department or select Custom:")
+    print("   Fakultät/Institut auswählen oder eigene Angabe machen:")
+    if faculties_data:
+        for idx, fac in enumerate(faculties_data, 1):
+            fac_name_disp = fac.get("name_de") if lang == "de" else fac.get("name_en")
+            print(f"   [{idx}] {fac_name_disp}")
+        custom_idx = len(faculties_data) + 1
+        print(f"   [{custom_idx}] {'Eigene Angabe / Custom' if lang == 'de' else 'Custom / Eigene Angabe'}")
+    else:
+        # Fallback if faculties.json is empty or missing
+        print("   [1] Institut für Informatik (default)" if lang == "de" else "   [1] Institute of Computer Science (default)")
+        print("   [2] Eigene Angabe / Custom" if lang == "de" else "   [2] Custom / Eigene Angabe")
+        custom_idx = 2
+
+    fac_choice_str = prompt("Choose faculty / Fakultät wählen", "1")
+    try:
+        fac_idx = int(fac_choice_str) - 1
+    except ValueError:
+        fac_idx = -1
+        
+    is_goe_cs = False
+    fac_contact = None
+    if faculties_data and 0 <= fac_idx < len(faculties_data):
+        selected_fac = faculties_data[fac_idx]
+        fac_name = selected_fac.get("name_de") if lang == "de" else selected_fac.get("name_en")
+        is_goe_cs = selected_fac.get("is_goe_cs", False)
+        contact_lang_key = "contact_de" if lang == "de" else "contact_en"
+        fac_contact = selected_fac.get(contact_lang_key)
+    elif not faculties_data and fac_choice_str == "1":
+        fac_name = "Institut für Informatik" if lang == "de" else "Institute of Computer Science"
+        is_goe_cs = True
+    else:
+        fac_name = prompt("Enter custom faculty/institute / Eigene Fakultät/Institut eingeben")
+        is_goe_cs = False
+        
+    # Göttingen CS Report Series (ISSN) prompt
+    include_issn = "n"
+    if is_goe_cs and degree_type in ("bachelor", "master") and uni_name == "Georg-August-Universität Göttingen":
+        include_issn_choice = prompt("Is this published in the Göttingen Computer Science Report Series? / Wird dies in den Göttinger Schriften zur Informatik veröffentlicht? (y/n)", "n")
+        include_issn = include_issn_choice.lower()
+        
+    city_name = prompt("City / Stadt des Studienortes", "Göttingen")
+
+    print()
+
+    # 5. Contact Info Page / Kontaktseite
+    print("5. Contact Info Page / Kontaktseite")
+    print("   [1] Include standard contact info (default)")
+    print("   [2] Disable contact info page entirely / Kontaktseite deaktivieren")
+    print("   [3] Custom contact info / Eigene Kontaktdaten angeben")
+    contact_choice = prompt("Choose contact option / Kontakt-Option wählen", "1")
+    
+    contact_val = ""
+    if contact_choice == "1":
+        if fac_contact:
+            addr = fac_contact.get("address", "").replace("\n", "\\\\ ")
+            contact_val = f"""contact: (
+      university: "{escape_quotes(uni_name)}",
+      address: [{addr}],
+      phone: "{escape_quotes(fac_contact.get("phone", ""))}",
+      fax: "{escape_quotes(fac_contact.get("fax", ""))}",
+      email: "{escape_quotes(fac_contact.get("email", ""))}",
+      website: "{escape_quotes(fac_contact.get("website", ""))}",
+    ),"""
+        else:
+            # Standard contact info will be used automatically (merging defaults)
+            contact_val = "// contact: none,"
+    elif contact_choice == "2":
+        contact_val = "contact: none,"
+    else:
+        print("   Enter custom contact info / Eigene Kontaktdaten eingeben:")
+        c_address = prompt("Address / Adresse (e.g. Goldschmidtstraße 7, 37077 Göttingen)", "Goldschmidtstraße 7, 37077 Göttingen, Germany" if lang == "en" else "Goldschmidtstraße 7, 37077 Göttingen, Deutschland")
+        c_phone = prompt("Phone / Telefon", "+49 (551) 39-172000")
+        c_fax = prompt("Fax", "+49 (551) 39-14403")
+        c_email = prompt("Email", "office@informatik.uni-goettingen.de")
+        c_website = prompt("Website / Webseite", "www.informatik.uni-goettingen.de")
+        
+        contact_val = f"""contact: (
+      university: "{escape_quotes(uni_name)}",
+      address: [{escape_quotes(c_address)}],
+      phone: "{escape_quotes(c_phone)}",
+      fax: "{escape_quotes(c_fax)}",
+      email: "{escape_quotes(c_email)}",
+      website: "{escape_quotes(c_website)}",
+    ),"""
+
+    print()
+
+    # 6. Meta Details / Projektdaten
+    print("6. Meta Details / Projektdaten")
     title = escape_quotes(prompt("Title of the work / Titel der Arbeit"))
     
     subtitle = escape_quotes(prompt("Subtitle / Untertitel (optional, press Enter to skip)", ""))
@@ -118,27 +221,45 @@ def main():
 
     print()
 
-    # 5. Draft Mode
-    print("5. Draft Mode / Entwurfsmodus")
+    # 7. Draft Mode / Entwurfsmodus
+    print("7. Draft Mode / Entwurfsmodus")
     draft_choice = prompt("Enable draft mode (DRAFT watermark & show todo boxes)? / Entwurfsmodus aktivieren (Wasserzeichen & Todos anzeigen)? (y/n)", "n")
     draft = "true" if draft_choice.lower().startswith("y") else "false"
 
-    # 6. Optional Pages and Sections / Optionale Seiten und Abschnitte
-    print("6. Optional Pages and Sections / Optionale Seiten und Abschnitte")
+    # 8. Optional Pages and Sections / Optionale Seiten und Abschnitte
+    print("8. Optional Pages and Sections / Optionale Seiten und Abschnitte")
     
-    # 6a. Standard Declaration of Independence
+    # 8a. Standard Declaration of Independence
     # Default: Yes for thesis, No for seminar/expose
     default_decl_opt = "n" if degree_type in ("expose", "seminar") else "y"
     include_decl_choice = prompt("Include a Declaration of Independence? / Selbstständigkeitserklärung einbinden? (y/n)", default_decl_opt)
     include_declaration = include_decl_choice.lower().startswith("y")
     
-    # 6b. AI Declaration (KI-Erklärung)
+    declaration_pos = "beginning"
+    if include_declaration:
+        print("      Position of Declaration of Independence / Position der Selbstständigkeitserklärung:")
+        print("      [1] Beginning / Anfang (default)")
+        print("      [2] End / Ende")
+        decl_pos_choice = prompt("      Choose position / Position wählen", "1")
+        declaration_pos = "end" if decl_pos_choice == "2" else "beginning"
+        print()
+    
+    # 8b. AI Declaration (KI-Erklärung)
     # Default: Yes for thesis, No for seminar/expose
     default_ai_opt = "n" if degree_type in ("expose", "seminar") else "y"
     include_ai_choice = prompt("Include a Declaration on the use of AI? / Erklärung zur KI-Nutzung einbinden? (y/n)", default_ai_opt)
     include_ai_decl = include_ai_choice.lower().startswith("y")
     
-    # 6c. Bibliography (Literaturverzeichnis)
+    declaration_ai_pos = "beginning"
+    if include_ai_decl:
+        print("      Position of AI Declaration / Position der Erklärung zur KI-Nutzung:")
+        print("      [1] Beginning / Anfang (default)")
+        print("      [2] End / Ende")
+        ai_pos_choice = prompt("      Choose position / Position wählen", "1")
+        declaration_ai_pos = "end" if ai_pos_choice == "2" else "beginning"
+        print()
+    
+    # 8c. Bibliography (Literaturverzeichnis)
     # Default: Yes
     include_bibliography = prompt("Include a Bibliography? / Literaturverzeichnis einbinden? (y/n)", "y").lower().startswith("y")
     
@@ -150,7 +271,7 @@ def main():
         bib_file_val = f'"{escape_quotes(bib_file)}"'
         bib_style_val = f'"{escape_quotes(bib_style)}"'
         
-    # 6d. Appendix (Anhang)
+    # 8d. Appendix (Anhang)
     # Default: No
     include_appendix = prompt("Include an Appendix? / Anhang einbinden? (y/n)", "n").lower().startswith("y")
     
@@ -198,12 +319,21 @@ def main():
     else:
         bibliography_val = "none"
 
+    # Build translations override if they diverge from default CS Göttingen preset
+    translations_override_lines = []
+    translations_override_lines.append(f'      institution: "{escape_quotes(fac_name)}",')
+    if include_issn.startswith("y"):
+        uni_val = f'      university: "Bachelor- und Masterarbeiten\\\\nan der Georg-August-Universität Göttingen\\\\nISSN 1612-6793",' if lang == "de" else f'      university: "Bachelor\'s and Master\'s Theses\\\\nat Georg-August-Universität Göttingen\\\\nISSN 1612-6793",'
+    else:
+        uni_val = f'      university: "{escape_quotes(uni_name)}",'
+    translations_override_lines.append(uni_val)
+    translations_override_lines.append(f'      city: "{escape_quotes(city_name)}",')
+    translations_override_str = "\n".join(translations_override_lines)
+
     main_content = f"""#import "/lib/thesis.typ": thesis, todo, acr
-#import "/lib/presets.typ"
 
 #thesis(
   config: (
-    ..presets.{preset_name},
     
     // Core details
     title: "{title}",
@@ -234,24 +364,17 @@ def main():
     // Set to false to hide the outline page completely (e.g. for exposés or short papers)
     {outline_val}
     
-    // Custom Translations / Branding override
-    // You can override individual preset fields without redefining the whole preset!
-    // translations: (
-    //   institution: "Institute of Computer Science",
-    //   university: "Georg-August-Universität Göttingen",
-    //   city: "Göttingen",
-    // ),
+    // Platzierung der Selbstständigkeits- und KI-Erklärung ("beginning" oder "end")
+    declaration_position: "{declaration_pos}",
+    declaration_ai_position: "{declaration_ai_pos}",
+    
+    // Custom Translations / Branding override (Dynamically configured)
+    translations: (
+{translations_override_str}
+    ),
     
     // Custom Contact Page (Optional & Dynamic)
-    // Set contact to none to disable the contact info page entirely, or override specific fields:
-    // contact: (
-    //   university: "Georg-August-Universität Göttingen",
-    //   address: [Goldschmidtstraße 7\\\\ 37077 Göttingen\\\\ Germany],
-    //   phone: "+49 (551) 39-172000",
-    //   fax: "+49 (551) 39-14403",
-    //   email: "office@informatik.uni-goettingen.de",
-    //   website: "www.informatik.uni-goettingen.de",
-    // ),
+    {contact_val}
   ),
   
   // Abstract / Zusammenfassung

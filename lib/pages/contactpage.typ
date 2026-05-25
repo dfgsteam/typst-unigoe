@@ -37,11 +37,17 @@
         )
       ]
       #v(.5cm)
+      #let supervisor_rows = (
+        [#config.translations.firstsupervisor_text:], config.firstsupervisor,
+      )
+      #if config.at("secondsupervisor", default: none) != none {
+        supervisor_rows.push([#config.translations.secondsupervisor_text:])
+        supervisor_rows.push(config.secondsupervisor)
+      }
       #table(
         columns: (auto, auto),
         stroke: none,
-        [#config.translations.firstsupervisor_text:], config.firstsupervisor,
-        [#config.translations.secondsupervisor_text:], config.secondsupervisor,
+        ..supervisor_rows
       )
     ],
   )
