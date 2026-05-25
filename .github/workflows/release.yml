@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Typst
-        uses: charliebruer/setup-typst@v5
+        uses: typst-community/setup-typst@v3
 
       - name: Compile PDF Documents
         run: |
