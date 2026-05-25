@@ -266,6 +266,7 @@ def main():
     bib_file_val = "none"
     bib_style_val = "ieee"
     if include_bibliography:
+        print("      * Tip: You can auto-sync Zotero using the 'Better BibLaTeX' format and 'Keep updated' option!")
         bib_file = prompt("Bibliography file path / Pfad zur Literaturdatenbank", "content/references.bib")
         bib_style = prompt("Bibliography style / Zitierstil (e.g. ieee, apa, mla, chicago)", "ieee")
         bib_file_val = f'"{escape_quotes(bib_file)}"'
@@ -285,6 +286,20 @@ def main():
     # Default: No
     include_roman_choice = prompt("Include introductory pages (Declaration, Abstract, Acronyms) in Table of Contents? / Einleitende Seiten (Erklärung, Zusammenfassung, Abkürzungen) im Inhaltsverzeichnis aufführen? (y/n)", "n")
     outline_roman_pages = "true" if include_roman_choice.lower().startswith("y") else "false"
+    
+    # 8f. List of Figures & List of Tables (Abbildungs- und Tabellenverzeichnis)
+    # Default: No
+    figures_choice = prompt("Include a List of Figures? / Abbildungsverzeichnis einbinden? (y/n)", "n")
+    show_list_of_figures = "true" if figures_choice.lower().startswith("y") else "false"
+    
+    tables_choice = prompt("Include a List of Tables? / Tabellenverzeichnis einbinden? (y/n)", "n")
+    show_list_of_tables = "true" if tables_choice.lower().startswith("y") else "false"
+    
+    # 8g. GitHub Actions CI/CD Pipeline
+    # Default: Yes for thesis, No for seminar/expose
+    default_pipeline_opt = "n" if degree_type in ("expose", "seminar") else "y"
+    include_pipeline_choice = prompt("Include GitHub Actions CI/CD release pipeline? (Auto-builds & releases PDF on version tags like v1.0) / GitHub Actions CI/CD Release-Pipeline einbinden? (y/n)", default_pipeline_opt)
+    include_pipeline = include_pipeline_choice.lower().startswith("y")
 
     print()
 
@@ -376,6 +391,10 @@ def main():
     // Sollen einleitende römische Seiten im Inhaltsverzeichnis aufgeführt werden?
     outline_roman_pages: {outline_roman_pages},
     
+    // Abbildungs- und Tabellenverzeichnis (List of Figures & List of Tables)
+    show_list_of_figures: {show_list_of_figures},
+    show_list_of_tables: {show_list_of_tables},
+    
     // Custom Translations / Branding override (Dynamically configured)
     translations: (
 {translations_override_str}
@@ -417,6 +436,66 @@ def main():
 
     with open("main.typ", "w", encoding="utf-8") as f:
         f.write(main_content)
+
+    # Handle GitHub Actions CI/CD release pipeline creation/deletion
+    if include_pipeline:
+        os.makedirs(".github/workflows", exist_ok=True)
+        pipeline_content = """name: Build and Release Typst PDFs
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Typst
+        uses: typst-community/setup-typst@v3
+
+      - name: Compile PDF Documents
+        run: |
+          make build
+          if [ -f example.typ ]; then
+            make build-example
+          fi
+
+      - name: Create GitHub Release and Upload Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            main.pdf
+            example.pdf
+          fail_on_unmatched_files: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+"""
+        with open(".github/workflows/release.yml", "w", encoding="utf-8") as f:
+            f.write(pipeline_content)
+        print("Created GitHub Actions release pipeline. / GitHub Actions Release-Pipeline wurde erstellt.")
+    else:
+        # If they chose not to include the pipeline, we can safely delete release.yml if it exists
+        if os.path.exists(".github/workflows/release.yml"):
+            try:
+                os.remove(".github/workflows/release.yml")
+                # Clean up empty directories
+                if not os.listdir(".github/workflows"):
+                    os.rmdir(".github/workflows")
+                if not os.listdir(".github"):
+                    os.rmdir(".github")
+                print("Removed GitHub Actions release pipeline. / GitHub Actions Release-Pipeline wurde entfernt.")
+            except Exception:
+                pass
 
     print("Success! 'main.typ' has been configured successfully. / Erfolg! 'main.typ' wurde erfolgreich konfiguriert.")
     print()

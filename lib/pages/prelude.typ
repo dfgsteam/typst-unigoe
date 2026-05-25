@@ -48,16 +48,35 @@
     pagebreak()
   }
 
+  // List of Figures (Abbildungsverzeichnis)
+  if config.at("show_list_of_figures", default: false) {
+    let title = if config.lang == "de" { "Abbildungsverzeichnis" } else { "List of Figures" }
+    set outline.entry(fill: repeat(". "))
+    show heading: set heading(outlined: config.at("outline_roman_pages", default: false))
+    outline(title: title, target: figure.where(kind: image))
+    pagebreak()
+  }
+
+  // List of Tables (Tabellenverzeichnis)
+  if config.at("show_list_of_tables", default: false) {
+    let title = if config.lang == "de" { "Tabellenverzeichnis" } else { "List of Tables" }
+    set outline.entry(fill: repeat(". "))
+    show heading: set heading(outlined: config.at("outline_roman_pages", default: false))
+    outline(title: title, target: figure.where(kind: table))
+    pagebreak()
+  }
+
   // List of Abbreviations (Acronyms)
   if acronyms != none and acronyms.len() > 0 {
     let title = if config.lang == "de" { "Abkürzungsverzeichnis" } else { "List of Abbreviations" }
     heading(level: 1, numbering: none, outlined: config.at("outline_roman_pages", default: false))[#title]
     v(1.5em)
+    let sorted-acronyms = acronyms.pairs().sorted(key: ((key, val)) => key)
     grid(
       columns: (3cm, 1fr),
       row-gutter: 1.5em,
       column-gutter: 1.5em,
-      ..acronyms.pairs().map(((key, val)) => (
+      ..sorted-acronyms.map(((key, val)) => (
         strong(key),
         if val.len() > 1 and config.lang == "de" { val.at(1) } else { val.first() }
       )).flatten()

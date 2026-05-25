@@ -31,9 +31,16 @@
     // Inhaltsverzeichnis (auf false setzen, um das Verzeichnis auszublenden, z. B. bei Exposés)
     // show_outline: true,
     
+    // Abbildungs- und Tabellenverzeichnis (List of Figures & List of Tables)
+    show_list_of_figures: false,
+    show_list_of_tables: false,
+    
     // Platzierung der Selbstständigkeits- und KI-Erklärung ("beginning" oder "end")
     declaration_position: "beginning",
     declaration_ai_position: "beginning",
+    
+    // Sollen einleitende römische Seiten im Inhaltsverzeichnis aufgeführt werden?
+    outline_roman_pages: false,
     
     // Eigene Übersetzungs- und Marken-Overrides
     translations: (

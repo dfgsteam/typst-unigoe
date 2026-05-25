@@ -35,6 +35,13 @@
     declaration_position: "end",
     declaration_ai_position: "end",
     
+    // Include Roman page numbered sections in Table of Contents
+    outline_roman_pages: true,
+    
+    // Abbildungs- und Tabellenverzeichnis (List of Figures & List of Tables)
+    show_list_of_figures: true,
+    show_list_of_tables: true,
+    
     // Custom Translations / Branding override
     // You can override individual preset fields without redefining the whole preset!
     // translations: (
