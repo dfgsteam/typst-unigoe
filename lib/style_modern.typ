@@ -12,13 +12,9 @@
   set text(font: "New Computer Modern")// or TeX Gyre Schola
   
   // set text(font: "FPL Neu", lang: lang, size: 10pt)
-  // style links/references with colorful boxes around them
-  show link: it => {
-    box(it, stroke: 1pt + red, outset: (bottom:2pt, x:.5pt, y:.5pt))
-  }
-  show ref: it => {
-    box(it, stroke: 1pt + green, outset: (bottom:1.5pt, x:.5pt, y:.5pt))
-  }
+  // style links and references in a sleek, modern, borderless way
+  show link: set text(fill: rgb("1a5fb4"))
+  show ref: set text(fill: rgb("0f766e"))
 
   // style headings in the document to be consistent with LaTeX
   set heading(numbering: "1.1")

@@ -125,8 +125,8 @@
     date: datetime.today(),
     keywords: full_config.at("keywords", default: ()),
   )
-  // set document language with hyphenation
-  set text(lang: full_config.lang, hyphenate: true)
+  // set document language and region with hyphenation
+  set text(lang: full_config.lang, region: if full_config.lang == "de" { "DE" } else { "US" }, hyphenate: true)
 
   // apply a style preset
   let apply_style
