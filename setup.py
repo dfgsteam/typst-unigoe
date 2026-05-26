@@ -383,7 +383,14 @@ def main():
     # 8. Optional Pages and Sections / Optionale Seiten und Abschnitte
     print("8. Optional Pages and Sections / Optionale Seiten und Abschnitte")
     
-    # 8a. Standard Declaration of Independence
+    # 8a. Abstract / Zusammenfassung
+    # Default: No for expose, Yes for others
+    default_abstract_opt = "n" if degree_type == "expose" else "y"
+    include_abstract_choice = prompt("Include an Abstract? / Zusammenfassung einbinden? (y/n)", default_abstract_opt)
+    include_abstract = include_abstract_choice.lower().startswith("y")
+    print()
+
+    # 8b. Standard Declaration of Independence
     # Default: Yes for thesis, No for seminar/expose
     default_decl_opt = "n" if degree_type in ("expose", "seminar") else "y"
     include_decl_choice = prompt("Include a Declaration of Independence? / Selbstständigkeitserklärung einbinden? (y/n)", default_decl_opt)
@@ -398,7 +405,7 @@ def main():
         declaration_pos = "end" if decl_pos_choice == "2" else "beginning"
         print()
     
-    # 8b. AI Declaration (KI-Erklärung)
+    # 8c. AI Declaration (KI-Erklärung)
     # Default: Yes for thesis, No for seminar/expose
     default_ai_opt = "n" if degree_type in ("expose", "seminar") else "y"
     include_ai_choice = prompt("Include a Declaration on the use of AI? / Erklärung zur KI-Nutzung einbinden? (y/n)", default_ai_opt)
@@ -413,7 +420,7 @@ def main():
         declaration_ai_pos = "end" if ai_pos_choice == "2" else "beginning"
         print()
     
-    # 8c. Bibliography (Literaturverzeichnis)
+    # 8d. Bibliography (Literaturverzeichnis)
     # Default: Yes
     include_bibliography = prompt("Include a Bibliography? / Literaturverzeichnis einbinden? (y/n)", "y").lower().startswith("y")
     
@@ -426,7 +433,7 @@ def main():
         bib_file_val = f'"{escape_quotes(bib_file)}"'
         bib_style_val = f'"{escape_quotes(bib_style)}"'
         
-    # 8d. Appendix (Anhang)
+    # 8e. Appendix (Anhang)
     # Default: No
     include_appendix = prompt("Include an Appendix? / Anhang einbinden? (y/n)", "n").lower().startswith("y")
     
@@ -436,12 +443,12 @@ def main():
         app_file = prompt("Appendix file path / Pfad zur Anhangsdatei", preferred_app)
         app_file_val = f'include "{escape_quotes(app_file)}"'
         
-    # 8e. Table of Contents Roman page inclusion
+    # 8f. Table of Contents Roman page inclusion
     # Default: No
     include_roman_choice = prompt("Include introductory pages (Declaration, Abstract, Acronyms) in Table of Contents? / Einleitende Seiten (Erklärung, Zusammenfassung, Abkürzungen) im Inhaltsverzeichnis aufführen? (y/n)", "n")
     outline_roman_pages = "true" if include_roman_choice.lower().startswith("y") else "false"
     
-    # 8f. List of Figures & List of Tables (Abbildungs- und Tabellenverzeichnis)
+    # 8g. List of Figures & List of Tables (Abbildungs- und Tabellenverzeichnis)
     # Default: No
     figures_choice = prompt("Include a List of Figures? / Abbildungsverzeichnis einbinden? (y/n)", "n")
     show_list_of_figures = "true" if figures_choice.lower().startswith("y") else "false"
@@ -449,13 +456,13 @@ def main():
     tables_choice = prompt("Include a List of Tables? / Tabellenverzeichnis einbinden? (y/n)", "n")
     show_list_of_tables = "true" if tables_choice.lower().startswith("y") else "false"
     
-    # 8g. GitHub Actions CI/CD Pipeline
+    # 8h. GitHub Actions CI/CD Pipeline
     # Default: Yes for thesis, No for seminar/expose
     default_pipeline_opt = "n" if degree_type in ("expose", "seminar") else "y"
     include_pipeline_choice = prompt("Include GitHub Actions CI/CD release pipeline? (Auto-builds & releases PDF on version tags like v1.0) / GitHub Actions CI/CD Release-Pipeline einbinden? (y/n)", default_pipeline_opt)
     include_pipeline = include_pipeline_choice.lower().startswith("y")
     
-    # 8h. Presentation Slides (Verteidigungspräsentation)
+    # 8i. Presentation Slides (Verteidigungspräsentation)
     # Default: Yes for thesis, No for seminar/expose
     default_pres_opt = "n" if degree_type in ("expose", "seminar") else "y"
     include_pres_choice = prompt("Include a Göttingen-branded Slide Deck for your defense? / Foliensatz für die Verteidigung einbinden? (y/n)", default_pres_opt)
@@ -472,9 +479,13 @@ def main():
     print("Generating main.typ... / Erstelle main.typ...")
 
     # Determine abstract and declaration defaults with robust file presence checking
-    preferred_abstract = "content/abstract_de.typ" if lang == "de" else "content/abstract.typ"
-    fallback_abstract = "content/abstract.typ" if lang == "de" else "content/abstract_de.typ"
-    abstract_file = get_existing_file(preferred_abstract, fallback_abstract)
+    if include_abstract:
+        preferred_abstract = "content/abstract_de.typ" if lang == "de" else "content/abstract.typ"
+        fallback_abstract = "content/abstract.typ" if lang == "de" else "content/abstract_de.typ"
+        abstract_file = get_existing_file(preferred_abstract, fallback_abstract)
+        abstract_val = f'include "{abstract_file}"'
+    else:
+        abstract_val = "none"
 
     preferred_decl = "content/declaration_de.typ" if lang == "de" else "content/declaration.typ"
     fallback_decl = "content/declaration.typ" if lang == "de" else "content/declaration_de.typ"
@@ -566,7 +577,7 @@ def main():
   
   // Abstract / Zusammenfassung
   // Can also be a dictionary for dual-language abstracts: (de: include "...", en: include "...")
-  abstract: include "{abstract_file}",
+  abstract: {abstract_val},
   
   // Declaration of independence (Set to none to omit it entirely, e.g. for seminar papers or exposés)
   declaration: {declaration_val},
@@ -727,6 +738,152 @@ jobs:
                 print(result.stderr)
         except Exception as e:
             print(f"Could not run make build. Error: / Fehler beim Ausführen von make build: {e}")
+
+    print()
+    
+    # 7. Cleanup template files / Bereinigung der Vorlagendateien
+    cleanup_choice = prompt("Clean up template files? (Deletes setup.py, init.sh, example.typ, example.pdf, content/template.typ, and unused presets/content files) / Vorlagendateien bereinigen? (Löscht setup.py, init.sh, example.typ, example.pdf, content/template.typ sowie ungenutzte Vorlagen/Inhalte) (y/n)", "y")
+    if cleanup_choice.lower().startswith("y"):
+        print("Cleaning up template files... / Bereinige Vorlagendateien...")
+        files_to_delete = [
+            "init.sh",
+            "example.typ",
+            "example.pdf",
+            "content/template.typ"
+        ]
+        
+        # Unused content files depending on choices, language, and degree type
+        
+        # 1. Abstract
+        if not include_abstract or degree_type == "expose":
+            files_to_delete.extend(["content/abstract.typ", "content/abstract_de.typ"])
+        else:
+            # Delete the abstract in the other language
+            if lang == "de":
+                files_to_delete.append("content/abstract.typ")
+            else:
+                files_to_delete.append("content/abstract_de.typ")
+                
+        # 2. Declaration of Independence
+        if not include_declaration or degree_type == "expose":
+            files_to_delete.extend(["content/declaration.typ", "content/declaration_de.typ"])
+        else:
+            # Delete the declaration in the other language
+            if lang == "de":
+                files_to_delete.append("content/declaration.typ")
+            else:
+                files_to_delete.append("content/declaration_de.typ")
+
+        # 3. AI Declaration
+        if not include_ai_decl:
+            files_to_delete.extend(["content/declaration_ai.typ", "content/declaration_ai_de.typ"])
+        else:
+            # Delete the AI declaration in the other language
+            if lang == "de":
+                files_to_delete.append("content/declaration_ai.typ")
+            else:
+                files_to_delete.append("content/declaration_ai_de.typ")
+                
+        # 4. Appendix
+        if not include_appendix:
+            files_to_delete.append("content/appendix.typ")
+            
+        # 5. Bibliography
+        if not include_bibliography:
+            files_to_delete.append("content/references.bib")
+
+        # 6. Presentation
+        if not include_presentation:
+            files_to_delete.extend(["presentation.typ", "presentation.pdf", "lib/presentation.typ"])
+
+        # 7. Unused language-specific main content template
+        if lang == "de":
+            files_to_delete.append("content/content.typ")
+        else:
+            files_to_delete.append("content/content_de.typ")
+
+        for filename in files_to_delete:
+            if os.path.exists(filename):
+                try:
+                    os.remove(filename)
+                    print(f"Deleted / Gelöscht: {filename}")
+                except Exception as e:
+                    print(f"Could not delete / Fehler beim Löschen von {filename}: {e}")
+                    
+        # Delete unused preset JSON files
+        active_preset = f"{lang}_{degree_type}.json"
+        presets_dir = "presets"
+        if os.path.exists(presets_dir):
+            try:
+                for f in os.listdir(presets_dir):
+                    if f.endswith(".json") and f != active_preset:
+                        path = os.path.join(presets_dir, f)
+                        os.remove(path)
+                        print(f"Deleted unused preset / Gelöscht: {path}")
+            except Exception as e:
+                print(f"Could not clean up presets directory / Fehler beim Bereinigen des presets-Verzeichnisses: {e}")
+                    
+        # Clean up Makefile
+        makefile_path = "Makefile"
+        if os.path.exists(makefile_path):
+            try:
+                with open(makefile_path, "r", encoding="utf-8") as f:
+                    makefile_lines = f.readlines()
+                
+                cleaned_lines = []
+                skip_target = False
+                for line in makefile_lines:
+                    if line.startswith("build-example:") or line.startswith("dev-example:"):
+                        skip_target = True
+                        continue
+                    if line.startswith("build-presentation:") or line.startswith("dev-presentation:"):
+                        if not os.path.exists("presentation.typ"):
+                            skip_target = True
+                            continue
+                    if line.startswith("\t"):
+                        if skip_target:
+                            continue
+                    else:
+                        skip_target = False
+                        
+                    # Clean up phony target list
+                    if line.startswith(".PHONY:"):
+                        phony_targets = [t for t in line.strip().split()[1:] if t not in ("build-example", "dev-example")]
+                        if not os.path.exists("presentation.typ"):
+                            phony_targets = [t for t in phony_targets if t not in ("build-presentation", "dev-presentation")]
+                        cleaned_lines.append(".PHONY: " + " ".join(phony_targets) + "\n")
+                        continue
+                        
+                    # Clean up build-all list
+                    if line.startswith("build-all:"):
+                        build_targets = ["build"]
+                        if os.path.exists("presentation.typ"):
+                            build_targets.append("build-presentation")
+                        cleaned_lines.append("build-all: " + " ".join(build_targets) + "\n")
+                        continue
+                        
+                    # Clean up clean target rm list
+                    if line.startswith("\trm -f"):
+                        rm_files = ["main.pdf"]
+                        if os.path.exists("presentation.pdf") or os.path.exists("presentation.typ"):
+                            rm_files.append("presentation.pdf")
+                        cleaned_lines.append("\trm -f " + " ".join(rm_files) + "\n")
+                        continue
+                        
+                    cleaned_lines.append(line)
+                    
+                with open(makefile_path, "w", encoding="utf-8") as f:
+                    f.writelines(cleaned_lines)
+                print("Optimized Makefile. / Makefile wurde bereinigt.")
+            except Exception as e:
+                print(f"Could not update Makefile / Fehler beim Bereinigen der Makefile: {e}")
+                
+        # Finally, delete setup.py itself
+        try:
+            os.remove(__file__)
+            print("Successfully cleaned up all template setup files. / Einrichtungsdateien wurden erfolgreich bereinigt.")
+        except Exception as e:
+            print(f"Could not remove setup.py / Fehler beim Löschen von setup.py: {e}")
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] in ("--presentation", "presentation", "-p"):
