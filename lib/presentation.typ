@@ -28,7 +28,7 @@
   // Page setup
   set page(
     paper: "presentation-16-9",
-    margin: (top: 2.4cm, bottom: 1.8cm, left: 1.8cm, right: 1.8cm),
+    margin: (top: 1.8cm, bottom: 1.2cm, left: 1.2cm, right: 1.2cm),
     header: context {
       // Suppress header on title slide (first page)
       if here().page() > 1 {
@@ -51,7 +51,7 @@
     footer: context {
       if here().page() > 1 {
         line(length: 100%, stroke: 0.5pt + rgb("dddddd"))
-        v(-0.5em)
+        v(-0.8em)
         grid(
           columns: (1fr, 1fr, 1fr),
           align(left)[
@@ -68,7 +68,7 @@
             ]
           ]
         )
-        v(0cm)
+        v(0.5em)
       }
     }
   )
