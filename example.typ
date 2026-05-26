@@ -1,4 +1,4 @@
-#import "/lib/thesis.typ": thesis, todo, acr
+#import "/lib/thesis.typ": thesis, todo, acr, theorem, definition, proof
 
 #thesis(
   config: (

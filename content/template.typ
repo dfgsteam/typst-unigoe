@@ -1,6 +1,8 @@
 // Copyright (c) 2025 Lorenz Glißmann
 // Creative Commons Zero v1.0 Universal
 
+#import "/lib/thesis.typ": theorem, definition, proof
+
 = First steps
 1. Read the following chapters
 2. Configure this template. Put your thesis data into the `main.typ`.
@@ -328,6 +330,26 @@ Footnotes can be easily inserted using the `footnote` function#footnote[Make sur
 === Math
 <math>
 Typst can display math formulas. The syntax is similar but also a little different from latex: #link("https://typst.app/docs/reference/math/")
+
+==== Theorems, Definitions and Proofs
+To make writing mathematical or computer science papers a breeze, this template provides built-in premium styled blocks for theorems, definitions, and proofs. You can import them from the thesis module and use them directly:
+
+#definition(title: "Prime Number")[
+  A natural number $p > 1$ is called a *prime number* if its only positive divisors are $1$ and $p$.
+]
+
+#theorem(title: "Infinitude of Primes")[
+  There are infinitely many prime numbers.
+]
+
+#proof[
+  Assume for contradiction that there are only finitely many prime numbers $p_1, p_2, ..., p_n$.
+  Consider the number:
+  $ N = p_1 p_2 dots p_n + 1 $
+  Since $N > 1$, it must have at least one prime divisor $q$. 
+  If $q$ were one of the known primes $p_i$, then $q$ would divide both $p_1 p_2 dots p_n$ and $N$, and thus must divide their difference $N - p_1 p_2 dots p_n = 1$. This is a contradiction.
+  Therefore, there must be a prime number not in the finite list, proving there are infinitely many primes.
+]
 
 === Acronyms
 <acronyms>

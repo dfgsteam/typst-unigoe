@@ -220,3 +220,54 @@
   // Todo list at the very end (only visible in draft mode)
   list-of-todos()
 }
+
+#let theorem(title: none, body) = {
+  v(1.2em)
+  block(
+    fill: rgb("f4f8fc"),
+    stroke: (left: 4pt + rgb("1a5fb4")),
+    inset: 12pt,
+    radius: (right: 4pt),
+    width: 100%,
+  )[
+    #text(weight: "bold", fill: rgb("1a5fb4"))[
+      #if title != none [Theorem: #title] else [Theorem]
+    ]
+    #v(0.6em)
+    #body
+  ]
+  v(0.8em)
+}
+
+#let definition(title: none, body) = {
+  v(1.2em)
+  block(
+    fill: rgb("f4fbf7"),
+    stroke: (left: 4pt + rgb("0f766e")),
+    inset: 12pt,
+    radius: (right: 4pt),
+    width: 100%,
+  )[
+    #text(weight: "bold", fill: rgb("0f766e"))[
+      #if title != none [Definition: #title] else [Definition]
+    ]
+    #v(0.6em)
+    #body
+  ]
+  v(0.8em)
+}
+
+#let proof(body) = {
+  v(1em)
+  block(
+    stroke: none,
+    inset: (left: 12pt),
+    width: 100%,
+  )[
+    #text(style: "italic")[Beweis / Proof:]
+    #v(0.4em)
+    #body
+    #align(right)[#box[#text(size: 10pt)[▪]]]
+  ]
+  v(1em)
+}

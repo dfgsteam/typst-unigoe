@@ -88,9 +88,46 @@
   // Suppress running header on pages where a new chapter (level 1 heading) starts
   let has-ch-start = query(heading.where(level: 1)).any(h => h.location().page() == here().page())
   if not has-ch-start {
-    align(right)[#ctx.title]
-    v(.5em, weak: true)
-    line(stroke: .7pt, length: 100%)
+    let headings = query(heading)
+    // Find active chapter (level 1)
+    let active_ch = headings.filter(h => h.level == 1 and h.location().page() <= here().page()).at(-1, default: none)
+    // Find active section (level 2)
+    let active_sect = headings.filter(h => h.level == 2 and h.location().page() <= here().page()).at(-1, default: none)
+    
+    // Ensure section belongs to current chapter
+    if active_sect != none and active_ch != none and active_sect.location().page() < active_ch.location().page() {
+      active_sect = none
+    }
+    
+    let left_text = if active_ch != none {
+      if active_ch.numbering != none {
+        let level = counter(heading).at(active_ch.location()).first()
+        [#ctx.translations.chapter #level: #active_ch.body]
+      } else {
+        active_ch.body
+      }
+    } else {
+      none
+    }
+    
+    let right_text = if active_sect != none {
+      if active_sect.numbering != none {
+        let num = counter(heading).at(active_sect.location())
+        [#num.map(str).join(".") #active_sect.body]
+      } else {
+        active_sect.body
+      }
+    } else {
+      none
+    }
+    
+    grid(
+      columns: (1fr, 1fr),
+      align(left)[#text(size: 8.5pt, fill: rgb("555555"))[#left_text]],
+      align(right)[#text(size: 8.5pt, fill: rgb("555555"))[#right_text]],
+    )
+    v(.4em, weak: true)
+    line(stroke: .5pt + rgb("dddddd"), length: 100%)
   }
 }
 #let footer(ctx) = {
