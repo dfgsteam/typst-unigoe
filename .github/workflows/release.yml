@@ -27,6 +27,9 @@ jobs:
           if [ -f example.typ ]; then
             make build-example
           fi
+          if [ -f presentation.typ ]; then
+            make build-presentation
+          fi
 
       - name: Create GitHub Release and Upload Assets
         uses: softprops/action-gh-release@v2
@@ -34,6 +37,7 @@ jobs:
           files: |
             main.pdf
             example.pdf
+            presentation.pdf
           fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

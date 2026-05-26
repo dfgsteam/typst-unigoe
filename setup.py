@@ -300,6 +300,12 @@ def main():
     default_pipeline_opt = "n" if degree_type in ("expose", "seminar") else "y"
     include_pipeline_choice = prompt("Include GitHub Actions CI/CD release pipeline? (Auto-builds & releases PDF on version tags like v1.0) / GitHub Actions CI/CD Release-Pipeline einbinden? (y/n)", default_pipeline_opt)
     include_pipeline = include_pipeline_choice.lower().startswith("y")
+    
+    # 8h. Presentation Slides (Verteidigungspräsentation)
+    # Default: Yes for thesis, No for seminar/expose
+    default_pres_opt = "n" if degree_type in ("expose", "seminar") else "y"
+    include_pres_choice = prompt("Include a Göttingen-branded Slide Deck for your defense? / Foliensatz für die Verteidigung einbinden? (y/n)", default_pres_opt)
+    include_presentation = include_pres_choice.lower().startswith("y")
 
     print()
 
@@ -469,6 +475,9 @@ jobs:
           if [ -f example.typ ]; then
             make build-example
           fi
+          if [ -f presentation.typ ]; then
+            make build-presentation
+          fi
 
       - name: Create GitHub Release and Upload Assets
         uses: softprops/action-gh-release@v2
@@ -476,6 +485,7 @@ jobs:
           files: |
             main.pdf
             example.pdf
+            presentation.pdf
           fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -494,6 +504,56 @@ jobs:
                 if not os.listdir(".github"):
                     os.rmdir(".github")
                 print("Removed GitHub Actions release pipeline. / GitHub Actions Release-Pipeline wurde entfernt.")
+            except Exception:
+                pass
+
+    # Handle Presentation Slide Deck creation/deletion
+    if include_presentation:
+        pres_content = f"""#import "/lib/presentation.typ": presentation, slide
+
+#show: presentation.with(
+  title: "{title}",
+  subtitle: "Verteidigung der Abschlussarbeit / Thesis Defense",
+  author: "{author}",
+  institute: "{fac_name}",
+  university: "{uni_name}",
+  date: none, // Set to none for today's date
+  logo: "/images/ugo-logo.svg",
+  lang: "{lang}",
+)
+
+#slide(title: "Einleitung & Motivation")[
+  - *Herausforderung*: Kurze Zusammenfassung der Problemstellung deiner Arbeit.
+  - *Zielsetzung*: Was wolltest du mit deiner Arbeit erreichen?
+  - *Relevanz*: Warum ist dieses Thema wichtig und wer profitiert davon?
+]
+
+#slide(title: "Wissenschaftlicher Beitrag / Kernidee")[
+  - *Lösungsansatz*: Wie hast du das Problem gelöst?
+  - *Methodik*: Welche wissenschaftlichen Methoden hast du angewendet?
+  - *Implementierung*: Kurzer Überblick über deine praktische Arbeit (falls vorhanden).
+]
+
+#slide(title: "Evaluation & Ergebnisse")[
+  - *Versuchsaufbau*: Wie hast du deine Lösung getestet?
+  - *Ergebnisse*: Was sind die wichtigsten Erkenntnisse deiner Arbeit?
+  - *Diskussion*: Welche Limitationen oder Sonderfälle gibt es?
+]
+
+#slide(title: "Fazit & Ausblick")[
+  - *Zusammenfassung*: Das Wichtigste auf den Punkt gebracht.
+  - *Ausblick*: Was könnte man als nächstes erforschen?
+  - *Fragen*: Ich bedanke mich für Ihre Aufmerksamkeit und freue mich auf Ihre Fragen!
+]
+"""
+        with open("presentation.typ", "w", encoding="utf-8") as f:
+            f.write(pres_content)
+        print("Created defense slide deck template. / Foliensatz-Vorlage für die Verteidigung wurde erstellt.")
+    else:
+        if os.path.exists("presentation.typ"):
+            try:
+                os.remove("presentation.typ")
+                print("Removed defense slide deck template. / Foliensatz-Vorlage wurde entfernt.")
             except Exception:
                 pass
 
