@@ -38,7 +38,161 @@ def get_existing_file(preferred, fallback):
         return fallback
     return preferred # fallback to default if neither exists
 
+def read_config_from_main():
+    defaults = {
+        "title": "Titel der Präsentation / Presentation Title",
+        "subtitle": "Verteidigung der Abschlussarbeit / Thesis Defense",
+        "author": "Vorname Nachname",
+        "institute": "Institut für Informatik",
+        "university": "Georg-August-Universität Göttingen",
+        "lang": "de"
+    }
+    if not os.path.exists("main.typ"):
+        return defaults
+    
+    try:
+        with open("main.typ", "r", encoding="utf-8") as f:
+            content = f.read()
+            
+        import re
+        # Parse fields from the config block
+        title_match = re.search(r'title:\s*"([^"]+)"', content)
+        if title_match:
+            defaults["title"] = title_match.group(1)
+            
+        subtitle_match = re.search(r'subtitle:\s*"([^"]+)"', content)
+        if subtitle_match:
+            defaults["subtitle"] = subtitle_match.group(1)
+            
+        author_match = re.search(r'author:\s*"([^"]+)"', content)
+        if author_match:
+            defaults["author"] = author_match.group(1)
+            
+        lang_match = re.search(r'lang:\s*"([^"]+)"', content)
+        if lang_match:
+            defaults["lang"] = lang_match.group(1)
+            
+        # Try to parse institution from translations if available
+        inst_match = re.search(r'institution:\s*"([^"]+)"', content)
+        if inst_match:
+            defaults["institute"] = inst_match.group(1)
+        else:
+            if defaults["lang"] == "de":
+                defaults["institute"] = "Institut für Informatik"
+            else:
+                defaults["institute"] = "Institute of Computer Science"
+                
+        uni_match = re.search(r'university:\s*"([^"]+)"', content)
+        if uni_match:
+            defaults["university"] = uni_match.group(1).replace("\\\\n", "\n").replace("\\n", "\n")
+            
+    except Exception:
+        pass
+        
+    return defaults
+
+def run_presentation_only():
+    clear_screen()
+    print("=========================================================")
+    print("    Typst Georg-August-Universität Göttingen Setup       ")
+    print("        Presentation Slide Deck Setup Only              ")
+    print("=========================================================")
+    print()
+    print("This will configure and generate your defense 'presentation.typ' slide deck.")
+    print("Dies konfiguriert und erstellt deinen Vortrags-Foliensatz 'presentation.typ'.")
+    print()
+    
+    defaults = read_config_from_main()
+    
+    lang_choice = prompt("Language / Sprache ([1] German/Deutsch, [2] English/Englisch)", "1" if defaults["lang"] == "de" else "2")
+    lang = "de" if lang_choice == "1" else "en"
+    
+    title = escape_quotes(prompt("Presentation Title / Titel der Präsentation", defaults["title"]))
+    subtitle = escape_quotes(prompt("Subtitle / Untertitel", defaults["subtitle"]))
+    author = escape_quotes(prompt("Author / Autor", defaults["author"]))
+    institute = escape_quotes(prompt("Institute/Faculty / Institut/Fakultät", defaults["institute"]))
+    university = escape_quotes(prompt("University / Universität", defaults["university"]))
+    
+    date_val = prompt("Date / Datum (press Enter for today / Eingabetaste für heute)", "none")
+    
+    if os.path.exists("presentation.typ"):
+        overwrite = prompt("presentation.typ already exists. Overwrite? / presentation.typ existiert bereits. Überschreiben? (y/n)", "y")
+        if not overwrite.lower().startswith("y"):
+            print("Aborted. No files were changed.")
+            sys.exit(0)
+            
+    pres_content = f"""#import "/lib/presentation.typ": presentation, slide
+
+#show: presentation.with(
+  title: "{title}",
+  subtitle: "{subtitle}",
+  author: "{author}",
+  institute: "{institute}",
+  university: "{university}",
+  date: {"none" if date_val == "none" else f'"{escape_quotes(date_val)}"'},
+  logo: "/images/ugo-logo.svg",
+  lang: "{lang}",
+)
+
+#slide(title: "Einleitung & Motivation")[
+  - *Herausforderung*: Kurze Zusammenfassung der Problemstellung deiner Arbeit.
+  - *Zielsetzung*: Was wolltest du mit deiner Arbeit erreichen?
+  - *Relevanz*: Warum ist dieses Thema wichtig und wer profitiert davon?
+]
+
+#slide(title: "Wissenschaftlicher Beitrag / Kernidee")[
+  - *Lösungsansatz*: Wie hast du das Problem gelöst?
+  - *Methodik*: Welche wissenschaftlichen Methoden hast du angewendet?
+  - *Implementierung*: Kurzer Überblick über deine praktische Arbeit (falls vorhanden).
+]
+
+#slide(title: "Evaluation & Ergebnisse")[
+  - *Versuchsaufbau*: Wie hast du deine Lösung getestet?
+  - *Ergebnisse*: Was sind die wichtigsten Erkenntnisse deiner Arbeit?
+  - *Diskussion*: Welche Limitationen oder Sonderfälle gibt es?
+]
+
+#slide(title: "Fazit & Ausblick")[
+  - *Zusammenfassung*: Das Wichtigste auf den Punkt gebracht.
+  - *Ausblick*: Was könnte man als nächstes erforschen?
+  - *Fragen*: Ich bedanke mich für Ihre Aufmerksamkeit und freue mich auf Ihre Fragen!
+]
+"""
+    with open("presentation.typ", "w", encoding="utf-8") as f:
+        f.write(pres_content)
+    print()
+    print("Created defense slide deck template. / Foliensatz-Vorlage für die Verteidigung wurde erstellt.")
+    print()
+    
+    build_now = prompt("Would you like to compile your presentation now? / Möchtest du deine Präsentation jetzt übersetzen? (y/n)", "y")
+    if build_now.lower().startswith("y"):
+        print("Compiling presentation via 'make build-presentation'...")
+        try:
+            result = subprocess.run(["make", "build-presentation"], capture_output=True, text=True)
+            if result.returncode == 0:
+                print("Compilation successful! 'presentation.pdf' has been generated. / Übersetzung erfolgreich! 'presentation.pdf' wurde erstellt.")
+            else:
+                print("Compilation failed. Error: / Übersetzung fehlgeschlagen. Fehler:")
+                print(result.stderr)
+        except Exception as e:
+            print(f"Could not run make build-presentation. Error: / Fehler beim Ausführen von make build-presentation: {e}")
+    sys.exit(0)
+
 def main():
+    clear_screen()
+    print("=========================================================")
+    print("    Typst Georg-August-Universität Göttingen Setup       ")
+    print("=========================================================")
+    print()
+    print("What would you like to configure? / Was möchtest du einrichten?")
+    print("   [1] Thesis, Seminar Paper, or Exposé (default)")
+    print("   [2] Standalone Presentation Slide Deck / Nur Foliensatz (Verteidigung)")
+    choice = prompt("Choose setup option / Option wählen", "1")
+    
+    if choice == "2":
+        run_presentation_only()
+        return
+
     clear_screen()
     print("=========================================================")
     print("    Typst Georg-August-Universität Göttingen Setup       ")
@@ -575,4 +729,7 @@ jobs:
             print(f"Could not run make build. Error: / Fehler beim Ausführen von make build: {e}")
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1 and sys.argv[1] in ("--presentation", "presentation", "-p"):
+        run_presentation_only()
+    else:
+        main()

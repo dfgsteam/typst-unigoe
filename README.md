@@ -50,7 +50,7 @@ This project is a **fork and extension** of the excellent unofficial Typst templ
 
 You can initialize a brand new project in a fresh directory with a single terminal command:
 ```bash
-curl -fsSL "https://raw.githubusercontent.com/dfgsteam/typst-unigoe/main/init.sh?v=\$(date +%s)" | bash
+curl -fsSL "https://raw.githubusercontent.com/dfgsteam/typst-unigoe/main/init.sh?v=$(date +%s)" | bash
 ```
 
 Alternatively, you can manually clone this repository and run the setup script:
