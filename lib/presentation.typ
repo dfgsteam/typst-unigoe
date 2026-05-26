@@ -6,7 +6,7 @@
   if title != none {
     block(width: 100%, below: 1.2em)[
       #text(size: 22pt, weight: "bold", fill: rgb("1a5fb4"))[#title]
-      #v(0.3em)
+      #v(-0.5em)
       #line(length: 100%, stroke: 1.5pt + rgb("1a5fb4"))
     ]
   }
@@ -28,10 +28,11 @@
   // Page setup
   set page(
     paper: "presentation-16-9",
-    margin: (top: 2.2cm, bottom: 1.6cm, left: 1.8cm, right: 1.8cm),
+    margin: (top: 2.4cm, bottom: 1.8cm, left: 1.8cm, right: 1.8cm),
     header: context {
       // Suppress header on title slide (first page)
       if here().page() > 1 {
+        v(3em)
         grid(
           columns: (1fr, auto),
           align(left + horizon)[
@@ -43,14 +44,14 @@
             }
           ]
         )
-        v(0.4em)
+        v(0em)
         line(length: 100%, stroke: 0.5pt + rgb("dddddd"))
       }
     },
     footer: context {
       if here().page() > 1 {
         line(length: 100%, stroke: 0.5pt + rgb("dddddd"))
-        v(0.4em)
+        v(-0.5em)
         grid(
           columns: (1fr, 1fr, 1fr),
           align(left)[
@@ -67,6 +68,7 @@
             ]
           ]
         )
+        v(0cm)
       }
     }
   )
@@ -79,7 +81,6 @@
   set list(marker: ([#text(fill: rgb("1a5fb4"))[•]], [#text(fill: rgb("0f766e"))[‣]]))
 
   // Title Slide Layout
-  set page(header: none, footer: none)
   
   align(center + horizon)[
     #grid(
