@@ -3,6 +3,51 @@ import sys
 import subprocess
 import os
 import json
+import shutil
+
+# Resolve template root directory (handles setups inside subfolders like expose, seminar, presentation)
+def find_template_root():
+    current = os.getcwd()
+    # Check current directory
+    if os.path.exists(os.path.join(current, "lib")) and os.path.exists(os.path.join(current, "presets")):
+        return "."
+    # Check parent directory
+    parent = os.path.dirname(current)
+    if os.path.exists(os.path.join(parent, "lib")) and os.path.exists(os.path.join(parent, "presets")):
+        return ".."
+    # Check grandparent directory
+    grandparent = os.path.dirname(parent)
+    if os.path.exists(os.path.join(grandparent, "lib")) and os.path.exists(os.path.join(grandparent, "presets")):
+        return "../.."
+    return "."
+
+template_root = find_template_root()
+path_prefix = "" if template_root == "." else template_root + "/"
+lib_path = f"{path_prefix}lib/thesis.typ" if template_root != "." else "/lib/thesis.typ"
+pres_lib_path = f"{path_prefix}lib/presentation.typ" if template_root != "." else "/lib/presentation.typ"
+logo_path_default = f"{path_prefix}images/ugo-logo.svg" if template_root != "." else "/images/ugo-logo.svg"
+
+def copy_template_file(src_name, dest_name=None):
+    if dest_name is None:
+        dest_name = src_name
+    
+    src_path = os.path.join(template_root, src_name)
+    dest_path = os.path.join(".", dest_name)
+    
+    if os.path.exists(src_path):
+        # Create destination directories if they don't exist
+        dest_dir = os.path.dirname(dest_path)
+        if dest_dir:
+            os.makedirs(dest_dir, exist_ok=True)
+        
+        # If destination file already exists, don't overwrite it
+        if not os.path.exists(dest_path):
+            try:
+                shutil.copy2(src_path, dest_path)
+                print(f"Copied template / Vorlage kopiert: {src_name} -> {dest_name}")
+            except Exception as e:
+                print(f"Warning: Could not copy {src_name} to {dest_name}: {e}")
+
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -121,7 +166,7 @@ def run_presentation_only():
             print("Aborted. No files were changed.")
             sys.exit(0)
             
-    pres_content = f"""#import "/lib/presentation.typ": presentation, slide
+    pres_content = f"""#import "{pres_lib_path}": presentation, slide
 
 #show: presentation.with(
   title: "{title}",
@@ -130,7 +175,7 @@ def run_presentation_only():
   institute: "{institute}",
   university: "{university}",
   date: {"none" if date_val == "none" else f'"{escape_quotes(date_val)}"'},
-  logo: "/images/ugo-logo.svg",
+  logo: "{logo_path_default}",
   lang: "{lang}",
 )
 
@@ -204,7 +249,7 @@ def main():
     print()
 
     # Load faculties from JSON
-    faculties_file = "presets/faculties.json"
+    faculties_file = os.path.join(template_root, "presets/faculties.json")
     faculties_data = []
     if os.path.exists(faculties_file):
         try:
@@ -482,33 +527,52 @@ def main():
     if include_abstract:
         preferred_abstract = "content/abstract_de.typ" if lang == "de" else "content/abstract.typ"
         fallback_abstract = "content/abstract.typ" if lang == "de" else "content/abstract_de.typ"
-        abstract_file = get_existing_file(preferred_abstract, fallback_abstract)
-        abstract_val = f'include "{abstract_file}"'
+        src_abstract = get_existing_file(os.path.join(template_root, preferred_abstract), os.path.join(template_root, fallback_abstract))
+        abstract_basename = os.path.basename(src_abstract)
+        local_abstract_path = os.path.join("content", abstract_basename)
+        copy_template_file(os.path.relpath(src_abstract, template_root), local_abstract_path)
+        abstract_val = f'include "{local_abstract_path}"'
     else:
         abstract_val = "none"
 
     preferred_decl = "content/declaration_de.typ" if lang == "de" else "content/declaration.typ"
     fallback_decl = "content/declaration.typ" if lang == "de" else "content/declaration_de.typ"
-    declaration_file = get_existing_file(preferred_decl, fallback_decl)
+    src_decl = get_existing_file(os.path.join(template_root, preferred_decl), os.path.join(template_root, fallback_decl))
+    decl_basename = os.path.basename(src_decl)
+    local_decl_path = os.path.join("content", decl_basename)
+    copy_template_file(os.path.relpath(src_decl, template_root), local_decl_path)
+    declaration_val = f'include "{local_decl_path}"' if include_declaration else "none"
 
     preferred_ai = "content/declaration_ai_de.typ" if lang == "de" else "content/declaration_ai.typ"
     fallback_ai = "content/declaration_ai.typ" if lang == "de" else "content/declaration_ai_de.typ"
-    declaration_ai_file = get_existing_file(preferred_ai, fallback_ai)
+    src_ai = get_existing_file(os.path.join(template_root, preferred_ai), os.path.join(template_root, fallback_ai))
+    ai_basename = os.path.basename(src_ai)
+    local_ai_path = os.path.join("content", ai_basename)
+    copy_template_file(os.path.relpath(src_ai, template_root), local_ai_path)
+    declaration_ai_val = f'include "{local_ai_path}"' if include_ai_decl else "none"
 
     preferred_content = "content/content_de.typ" if lang == "de" else "content/content.typ"
     fallback_content = "content/content.typ" if lang == "de" else "content/content_de.typ"
-    content_file = get_existing_file(preferred_content, fallback_content)
+    src_content = get_existing_file(os.path.join(template_root, preferred_content), os.path.join(template_root, fallback_content))
+    content_basename = os.path.basename(src_content)
+    local_content_path = os.path.join("content", content_basename)
+    copy_template_file(os.path.relpath(src_content, template_root), local_content_path)
 
     # For exposé, declaration is usually none and outline false by default
     outline_val = "show_outline: false," if degree_type == "expose" else "// show_outline: true,"
 
-    declaration_val = f'include "{declaration_file}"' if include_declaration else "none"
-    declaration_ai_val = f'include "{declaration_ai_file}"' if include_ai_decl else "none"
-
     if include_bibliography:
-        bibliography_val = f'bibliography({bib_file_val}, style: {bib_style_val}, title: none)'
+        local_bib_path = os.path.join("content", "references.bib")
+        copy_template_file("content/references.bib", local_bib_path)
+        bibliography_val = f'bibliography("{local_bib_path}", style: {bib_style_val}, title: none)'
     else:
         bibliography_val = "none"
+
+    if include_appendix:
+        local_app_path = os.path.join("content", "appendix.typ")
+        copy_template_file("content/appendix.typ", local_app_path)
+        app_file_val = f'include "{local_app_path}"'
+
 
     # Build translations override if they diverge from default CS Göttingen preset
     translations_override_lines = []
@@ -521,7 +585,7 @@ def main():
     translations_override_lines.append(f'      city: "{escape_quotes(city_name)}",')
     translations_override_str = "\n".join(translations_override_lines)
 
-    main_content = f"""#import "/lib/thesis.typ": thesis, todo, acr
+    main_content = f"""#import "{lib_path}": thesis, todo, acr
 
 #thesis(
   config: (
@@ -546,9 +610,9 @@ def main():
     // Draft Mode (Set to true to show a DRAFT watermark and render all #todo() boxes)
     draft: {draft},
     
-    // Custom Logo (Default: "/images/ugo-logo.svg")
+    // Custom Logo (Default: "{logo_path_default}")
     // Set to none to hide the logo, or specify an absolute path to a custom SVG/JPG/PNG
-    // logo: "/images/ugo-logo.svg", 
+    // logo: "{logo_path_default}", 
     // logo_width: 6.5cm,
     
     // Custom Outline / Table of Contents
@@ -674,7 +738,7 @@ jobs:
 
     # Handle Presentation Slide Deck creation/deletion
     if include_presentation:
-        pres_content = f"""#import "/lib/presentation.typ": presentation, slide
+        pres_content = f"""#import "{pres_lib_path}": presentation, slide
 
 #show: presentation.with(
   title: "{title}",
@@ -683,7 +747,7 @@ jobs:
   institute: "{fac_name}",
   university: "{uni_name}",
   date: none, // Set to none for today's date
-  logo: "/images/ugo-logo.svg",
+  logo: "{logo_path_default}",
   lang: "{lang}",
 )
 
@@ -810,21 +874,26 @@ jobs:
                 except Exception as e:
                     print(f"Could not delete / Fehler beim Löschen von {filename}: {e}")
                     
-        # Delete unused preset JSON files
-        active_preset = f"{lang}_{degree_type}.json"
-        presets_dir = "presets"
-        if os.path.exists(presets_dir):
-            try:
-                for f in os.listdir(presets_dir):
-                    if f.endswith(".json") and f != active_preset:
-                        path = os.path.join(presets_dir, f)
-                        os.remove(path)
-                        print(f"Deleted unused preset / Gelöscht: {path}")
-            except Exception as e:
-                print(f"Could not clean up presets directory / Fehler beim Bereinigen des presets-Verzeichnisses: {e}")
+        # Delete unused preset JSON files (only if local to the setup)
+        if template_root == ".":
+            active_preset = f"{lang}_{degree_type}.json"
+            presets_dir = "presets"
+            if os.path.exists(presets_dir):
+                try:
+                    for f in os.listdir(presets_dir):
+                        if f.endswith(".json") and f != active_preset:
+                            path = os.path.join(presets_dir, f)
+                            os.remove(path)
+                            print(f"Deleted unused preset / Gelöscht: {path}")
+                except Exception as e:
+                    print(f"Could not clean up presets directory / Fehler beim Bereinigen des presets-Verzeichnisses: {e}")
                     
-        # Clean up Makefile
+        # Clean up Makefile (copy from template root first if in a subfolder setup)
         makefile_path = "Makefile"
+        src_makefile = os.path.join(template_root, "Makefile")
+        if os.path.exists(src_makefile) and not os.path.exists(makefile_path):
+            copy_template_file("Makefile", makefile_path)
+            
         if os.path.exists(makefile_path):
             try:
                 with open(makefile_path, "r", encoding="utf-8") as f:
@@ -870,6 +939,14 @@ jobs:
                         cleaned_lines.append("\trm -f " + " ".join(rm_files) + "\n")
                         continue
                         
+                    # Adjust command for subfolders if template_root is not current
+                    if template_root != ".":
+                        # Prefix font paths
+                        line = line.replace("lib/", f"{path_prefix}lib/")
+                        # Add --root argument to compile/watch commands
+                        line = line.replace("typst compile ", f"typst compile --root {template_root} ")
+                        line = line.replace("typst watch ", f"typst watch --root {template_root} ")
+
                     cleaned_lines.append(line)
                     
                 with open(makefile_path, "w", encoding="utf-8") as f:
